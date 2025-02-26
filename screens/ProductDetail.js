@@ -1,12 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const DetailsScreen = () => {
+const DetailsScreen = ({ route }) => {
+  const { title, subtitle, price } = route.params;
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Audi Rs7</Text>
-      <Text style={styles.subtitle}>This is a very fast car</Text>
-      <Text style={styles.price}>€120,000</Text>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.subtitle}>{subtitle}</Text>
+      <Text style={styles.price}>€{price}</Text>
     </View>
   );
 }

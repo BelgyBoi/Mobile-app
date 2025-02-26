@@ -4,16 +4,42 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 
 import ProductCard from '../components/ProductCard.js';
 
-const HomeScreen = (navigation) => {
+import RS7_Image from "../images/audi-rs7/rs7_1.webp";
+import GT3RS_Image from "../images/porsche-GT3RS/Porsche_GT3RS_1.jpg";
+
+const HomeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
         <Text style={styles.heading}>View our brands</Text>
 
         <ScrollView style={styles.cardContainer}>
-            <View style={styles.row}>
-                <ProductCard />
-                <ProductCard />
-                <ProductCard />
+            <View style={styles.row}>   
+                <ProductCard
+                title="Audi RS7"
+                subtitle="Experience comfort and excellence"
+                price="120,000"
+                image={RS7_Image}
+                onPress={() => 
+                  navigation.navigate('Details', {
+                    title: 'Audi RS7',
+                    subtitle: 'Experience comfort and excellence',
+                    price: '120,000',
+                  })
+                }
+                />
+                <ProductCard 
+                title="Porsche GT3 RS"
+                subtitle="Experience speed and power"
+                price="350,000"
+                image={GT3RS_Image}
+                onPress={() => 
+                  navigation.navigate('Details', {
+                    title: 'Porsche GT3 RS',
+                    subtitle: 'Experience speed and power',
+                    price: '350,000',
+                  })
+                }
+                />
             </View>
         </ScrollView>
 

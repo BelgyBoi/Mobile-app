@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, image, title, subtitle, price, onPress, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 
@@ -8,18 +8,13 @@ const ProductCard = () => {
     
     return (
         <View style={styles.card}>
-            <Image 
-                source={require('../images/rs7_1.webp')} 
-                style={styles.image}
-            />
-            <Text style={styles.title}>Audi Rs7</Text>
-            <Text style={styles.description}>This is a very fast car</Text>
-            <Text style={styles.price}>€120,000</Text>
+            <Image source={image} style={styles.image} />
+            <Text style={styles.title}>{title}</Text>
+            <Text style={styles.description}>{subtitle}</Text>
+            <Text style={styles.price}>€{price}</Text>
             
-            <TouchableOpacity style={styles.button} 
-            onPress={() => navigation.navigate("Details")}
-            >
-            <Text style={styles.buttonText}>View Details</Text>
+            <TouchableOpacity style={styles.button} onPress={onPress}>
+            <Text style={styles.buttonText}>View Product</Text>
             </TouchableOpacity>
         </View>
     );
