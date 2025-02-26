@@ -1,14 +1,33 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 const DetailsScreen = ({ route }) => {
   const { title, subtitle, price } = route.params;
-
+  const [quantity, setQuantity] = React.useState(1);
+  
+  const increaseQuantity = () => setQuantity(quantity + 1);
+  const decreaseQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
       <Text style={styles.subtitle}>{subtitle}</Text>
       <Text style={styles.price}>€{price}</Text>
+    
+      <View style={styles.quantityContainer}>
+        <TouchableOpacity style={styles.button} onPress={decreaseQuantity}>
+          <Text style={styles.buttonText}>-</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.quantity}>{quantity}</Text>
+
+        <TouchableOpacity style={styles.button} onPress={increaseQuantity}>
+          <Text style={styles.buttonText}>+</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -30,6 +49,20 @@ const styles = StyleSheet.create({
     price: {
         fontSize: 16,
         color: 'green',
+    },
+
+    quantityContainer: {
+        flexDirection: 'row',
+        marginTop: 20,
+    },
+    quantity: {
+        fontSize: 24,
+        marginHorizontal: 20,
+    },
+    button: {
+        padding: 10,
+        backgroundColor: '#007bff',
+        borderRadius: 5,
     },
 
 });

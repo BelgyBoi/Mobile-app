@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, image, title, subtitle, price, onPress, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 
-const ProductCard = () => {
+const ProductCard = ({ title, subtitle, price, image, onPress }) => {
     const navigation = useNavigation();
     
     return (
