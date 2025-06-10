@@ -26,10 +26,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
         alignItems: 'center',
         justifyContent: 'center',
-        gap: 20,
-        maxWidth: '95%',
-        maxHeight: '95%',
-        borderRadius: 5,
     },
     image: {
         width: '100%',
@@ -51,8 +47,7 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 10,
         padding: 10,
-        backgroundColor: '#007bff',
-        borderRadius: 5,
+        backgroundColor: '#A3322A',   
     },
     buttonText: {
         color: '#fff',

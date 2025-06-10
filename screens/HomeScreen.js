@@ -1,6 +1,7 @@
 import React, {useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { ScrollView, StyleSheet, Text, View } from 'react-native'; 
+import { useNavigation } from '@react-navigation/native';
 import ProductCard from '../components/ProductCard.js';
 
 const HomeScreen = ({navigation}) => {
@@ -43,7 +44,7 @@ const HomeScreen = ({navigation}) => {
                   subtitle={product.subtitle}
                   price={product.price}
                   image={product.image}
-                  onPress={() => navigation.navigate('Details', { productId: product.id })}
+                  onPress={() => navigation.navigate('Details', product)}
                 />
               ))}   
             </View>
