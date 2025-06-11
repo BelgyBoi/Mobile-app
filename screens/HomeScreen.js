@@ -4,6 +4,10 @@ import { ScrollView, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, V
 import ProductCard from '../components/ProductCard.js';
 import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
+import layout from '../styles/layout.js';
+import textStyles from '../styles/text.js';
+import buttonStyles from '../styles/button.js';
+
 
 
 const brandNames = {
@@ -206,12 +210,7 @@ const HomeScreen = ({navigation}) => {
 
 const styles = StyleSheet.create({
     container: {
-      display: 'flex',
-      backgroundColor: '#fff',
-      justifyContent: 'center', // Vertically center
-      alignItems: 'center', // Horizontally center
-      maxWidth: '95%',
-      maxHeight: '95%',
+      ...layout.container,
     },
     heading: {
       fontSize: 24,

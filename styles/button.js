@@ -1,7 +1,7 @@
-import { Stylesheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import colors from './colors.js';
 
-const buttonStyles = Stylesheet.create({
+const buttonStyles = StyleSheet.create({
     primaryButton: {
         backgroundColor: colors.secondary,
         padding: 10,

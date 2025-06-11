@@ -1,7 +1,7 @@
-import { Stylesheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import colors from './colors.js';
 
-const layout= Stylesheet.create({
+const layout= StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: colors.background,
