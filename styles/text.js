@@ -5,12 +5,17 @@ const textStyles = StyleSheet.create({
     defaultText: {
         fontFamily: 'SpaceGrotesk_400Regular',
         color: colors.primary,
-        fontSize: 14,
+        fontSize: 16,
     },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 10,
+    },
+    highlight: {
+        fontSize: 18,
+        color: colors.secondary,
+        fontWeight: 'bold',
     },
     header: {
         fontSize: 20,
@@ -29,6 +34,11 @@ const textStyles = StyleSheet.create({
         fontSize: 16,
         textAlign: 'center',
         color: colors.background,
+    },
+    chipText: {
+        fontSize: 14,
+        color: colors.background,
+        textAlign: 'center',
     },
 });
 export default textStyles;

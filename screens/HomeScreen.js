@@ -1,13 +1,16 @@
-import React, {useEffect, useState } from 'react';
+import React, {useEffect, useState, useMemo } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Modal, ScrollView, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from 'react-native'; 
 import ProductCard from '../components/ProductCard.js';
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
 import SectionedMultiSelect from 'react-native-sectioned-multi-select'; 
-import GlobalContainer from '../components/GlobalContainer.js'; // Added this import
+import GlobalContainer from '../globalElements/GlobalContainer.js'; // Added this import
 import layout from '../styles/layout.js';
 import textStyles from '../styles/text.js';
 import buttonStyles from '../styles/button.js';
+import layoutStyles from '../styles/layout.js';
+import colors from '../styles/colors.js';
+import CloseButton from '../globalElements/CloseButton.js';
 
 
 const brandNames = {
@@ -51,6 +54,32 @@ const HomeScreen = ({navigation}) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("price-asc");
   const [filtersVisible, setFiltersVisible] = useState(false);
+  const [brandDropdownOpen, setBrandDropdownOpen] = useState(false);
+  const [carTypeDropdownOpen, setCarTypeDropdownOpen] = useState(false);
+
+  // Handler for selecting/deselecting a brand
+  const handleBrandSelect = (brandId) => {
+    setSelectedBrands(prevSelectedBrands =>
+      prevSelectedBrands.includes(brandId)
+        ? prevSelectedBrands.filter(id => id !== brandId)
+        : [...prevSelectedBrands, brandId]
+    );
+  };
+  
+  // Handler for selecting/deselecting a car type
+  const handleCarTypeSelect = (typeId) => {
+    setSelectedTypes(prevSelectedTypes =>
+      prevSelectedTypes.includes(typeId)
+        ? prevSelectedTypes.filter(id => id !== typeId)
+        : [...prevSelectedTypes, typeId]
+    );
+    // setBrandDropdownOpen(false); 
+  };
+
+  const clearAllFilters = () => {
+    setSelectedBrands([]);
+    setSelectedTypes([]);
+  };
   
   useEffect(() => {
     fetch(
@@ -78,7 +107,7 @@ const HomeScreen = ({navigation}) => {
       .catch(console.error);
     }, []);
 
-    const filteredProducts = products.filter((p) => {
+    const filteredProducts = useMemo(() => products.filter((p) => {
       const brandMatch = selectedBrands.length === 0 ||
         selectedBrands.some((brand) => p.categories.includes(brand));
 
@@ -89,65 +118,142 @@ const HomeScreen = ({navigation}) => {
         p.title.toLowerCase().includes(searchQuery.toLowerCase());
 
       return brandMatch && typeMatch && searchMatch;
-    });
+    }), [products, selectedBrands, selectedTypes, searchQuery]);
   
     // Determine which brands and types have at least one product in the entire dataset
-    const allBrandsWithProducts = new Set();
-    const allTypesWithProducts = new Set();
-    products.forEach(product => {
-        (product.categories || []).forEach(catId => {
-            if (brandNames[catId] !== undefined && catId !== "") { // Ensure it's a defined brand and not the "All" placeholder
-                allBrandsWithProducts.add(catId);
-            }
-            if (carTypeNames[catId] !== undefined && catId !== "") { // Ensure it's a defined type and not the "All" placeholder
-                allTypesWithProducts.add(catId);
-            }
-        });
-    });
+    const allBrandsWithProducts = useMemo(() => {
+      const set = new Set();
+      products.forEach(product => {
+          (product.categories || []).forEach(catId => {
+              if (brandNames[catId] !== undefined && catId !== "") {
+                  set.add(catId);
+              }
+          });
+      });
+      return set;
+    }, [products]);
+
+    const allTypesWithProducts = useMemo(() => {
+      const set = new Set();
+      products.forEach(product => {
+          (product.categories || []).forEach(catId => {
+              if (carTypeNames[catId] !== undefined && catId !== "") {
+                  set.add(catId);
+              }
+          });
+      });
+      return set;
+    }, [products]);
   
     // Dynamically calculate available brands and types based on current selections
-    const availableBrands = new Set(); // Brands available given selectedTypes
-    const availableTypes = new Set();  // Types available given selectedBrands
-  
-    products.forEach((p) => {
-      const productCategories = p.categories || [];
-      // Determine if this product's brands should be added to the available set
-      if (selectedTypes.length === 0 || selectedTypes.some(typeId => productCategories.includes(typeId))) {
-        productCategories.forEach(catId => {
-          if (brandNames[catId] !== undefined && catId !== "") { // Is a known brand and not the "All" ID
-            availableBrands.add(catId);
-          }
-        });
-      }
-      // Determine if this product's types should be added to the available set
-      if (selectedBrands.length === 0 || selectedBrands.some(brandId => productCategories.includes(brandId))) {
-        productCategories.forEach(catId => {
-          if (carTypeNames[catId] !== undefined && catId !== "") { // Is a known type and not the "All" ID
-            availableTypes.add(catId);
-          }
-        });
-      }
-    });
+    const availableBrands = useMemo(() => {
+      const set = new Set();
+      products.forEach((p) => {
+        const productCategories = p.categories || [];
+        if (selectedTypes.length === 0 || selectedTypes.some(typeId => productCategories.includes(typeId))) {
+          productCategories.forEach(catId => {
+            if (brandNames[catId] !== undefined && catId !== "") {
+              set.add(catId);
+            }
+          });
+        }
+      });
+      return set;
+    }, [products, selectedTypes]);
+
+    const availableTypes = useMemo(() => {
+      const set = new Set();
+      products.forEach((p) => {
+        const productCategories = p.categories || [];
+        if (selectedBrands.length === 0 || selectedBrands.some(brandId => productCategories.includes(brandId))) {
+          productCategories.forEach(catId => {
+            if (carTypeNames[catId] !== undefined && catId !== "") {
+              set.add(catId);
+            }
+          });
+        }
+      });
+      return set;
+    }, [products, selectedBrands]);
   
     // Prepare items for the brand selector
-    const brandSelectorItems = Object.entries(brandNames)
+    const brandSelectorItems = useMemo(() => Object.entries(brandNames)
         .filter(([id, name]) => {
-            if (id === "") return false; // Exclude "All categories" from selectable items here
-            // Show brand if it generally has products AND (no types are selected OR it's available with selected types)
+            if (id === "") return false; 
             return allBrandsWithProducts.has(id) &&
                    (selectedTypes.length === 0 || availableBrands.has(id));
         })
-        .map(([id, name]) => ({ id, name }));
+        .map(([id, name]) => ({ id, name })), 
+        [allBrandsWithProducts, selectedTypes, availableBrands, brandNames]);
   
     // Prepare items for the car type selector
-    const carTypeSelectorItems = Object.entries(carTypeNames)
+    const carTypeSelectorItems = useMemo(() => Object.entries(carTypeNames)
         .filter(([id, name]) => {
-            if (id === "") return false; // Exclude "All car types" from selectable items here
-            // Show type if it generally has products AND (no brands are selected OR it's available with selected brands)
+            if (id === "") return false; 
             return allTypesWithProducts.has(id) &&
                    (selectedBrands.length === 0 || availableTypes.has(id));
         })
-        .map(([id, name]) => ({ id, name }));
+        .map(([id, name]) => ({ id, name })),
+        [allTypesWithProducts, selectedBrands, availableTypes, carTypeNames]);
+
+    // Effect to auto-deselect incompatible filters
+    useEffect(() => {
+      if (products.length === 0) return; // Don't run if products aren't loaded
+
+      let changed = false;
+      // Check selected brands for compatibility
+      if (selectedTypes.length > 0) {
+        const newSelectedBrands = selectedBrands.filter(brandId => availableBrands.has(brandId));
+        if (newSelectedBrands.length !== selectedBrands.length) {
+          setSelectedBrands(newSelectedBrands);
+          changed = true;
+        }
+      }
+
+      // Check selected types for compatibility
+      if (selectedBrands.length > 0) {
+        const newSelectedTypes = selectedTypes.filter(typeId => availableTypes.has(typeId));
+        if (newSelectedTypes.length !== selectedTypes.length) {
+          setSelectedTypes(newSelectedTypes);
+          changed = true;
+        }
+      }
+      // If nothing was selected initially and then a filter makes others incompatible, this handles it.
+      // This case is more for when a product data might change or initial load defines availability.
+      // The primary deselection logic is when a user actively changes a filter.
+      // However, this ensures consistency if, for example, selectedBrands had items but selectedTypes was empty,
+      // and then availableBrands (based on no type selection) didn't include one of the selectedBrands.
+
+      // If no specific filter type is active, ensure selected items are generally valid
+      if (selectedTypes.length === 0 && selectedBrands.length > 0) {
+        const generallyAvailableBrands = new Set();
+        products.forEach(p => {
+          (p.categories || []).forEach(catId => {
+            if (brandNames[catId] !== undefined && catId !== "") generallyAvailableBrands.add(catId);
+          });
+        });
+        const newSelectedBrands = selectedBrands.filter(brandId => generallyAvailableBrands.has(brandId));
+        if (newSelectedBrands.length !== selectedBrands.length) {
+          setSelectedBrands(newSelectedBrands);
+          changed = true;
+        }
+      }
+
+      if (selectedBrands.length === 0 && selectedTypes.length > 0) {
+        const generallyAvailableTypes = new Set();
+        products.forEach(p => {
+          (p.categories || []).forEach(catId => {
+            if (carTypeNames[catId] !== undefined && catId !== "") generallyAvailableTypes.add(catId);
+          });
+        });
+        const newSelectedTypes = selectedTypes.filter(typeId => generallyAvailableTypes.has(typeId));
+        if (newSelectedTypes.length !== selectedTypes.length) {
+          setSelectedTypes(newSelectedTypes);
+          changed = true;
+        }
+      }
+
+    }, [products, selectedBrands, selectedTypes, availableBrands, availableTypes, brandNames, carTypeNames]);
     
   return (
     <>
@@ -160,81 +266,108 @@ const HomeScreen = ({navigation}) => {
       <View style={{
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.4)',
+        backgroundBlur: 'dark',
         justifyContent: 'center',
         alignItems: 'center'
       }}>
-        <View style={{
-          width: '90%',
-          backgroundColor: '#fff',
-          borderRadius: 20,
-          padding: 20
-        }}>
+        <View style={styles.modalView}>
           {/* Close Button */}
           <TouchableOpacity
             onPress={() => setFiltersVisible(false)}
-            style={{ position: 'absolute', top: 10, right: 10 }}>
-            <Text style={{ fontSize: 22 }}>✖</Text>
+            style={styles.modalCloseButton}>
+            <CloseButton />
           </TouchableOpacity>
-          {/* --- FILTERS GO HERE --- */}
-          <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 20 }}>Filters</Text>
+          <Text style={styles.modalTitle}>Filters</Text>
+
+          {/* Selected Filters Display Area */}
+          {(selectedBrands.length > 0 || selectedTypes.length > 0) && (
+            <View style={styles.selectedFiltersSection}>
+              <View style={styles.selectedFiltersHeader}>
+                <Text style={styles.selectedFiltersTitle}>Active Filters:</Text>
+                <TouchableOpacity onPress={clearAllFilters} style={styles.clearAllChipButton}>
+                  <Text style={styles.clearAllChipButtonText}>Clear all</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.selectedFiltersContainerChips}>
+                {selectedBrands.map(brandId => (
+                  <TouchableOpacity key={brandId} onPress={() => handleBrandSelect(brandId)} style={styles.filterChip}>
+                    <Text style={[styles.text, styles.filterChipText]}>{brandNames[brandId]}</Text>
+                    <Text style={styles.filterChipRemove}>×</Text>
+                  </TouchableOpacity>
+                ))}
+                {selectedTypes.map(typeId => (
+                  <TouchableOpacity key={typeId} onPress={() => handleCarTypeSelect(typeId)} style={styles.filterChip}>
+                    <Text style={[styles.text, styles.filterChipText]}>{carTypeNames[typeId]}</Text>
+                    <Text style={styles.filterChipRemove}>×</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          )}
       
-            {/* Example: Brands Dropdown */}
-            <View style={{ marginBottom: 15 }}>
-              <Text style={{ marginBottom: 5 }}>Brands</Text>
-              <SectionedMultiSelect
-                items={brandSelectorItems}
-                IconRenderer={Icon}
-                uniqueKey='id'
-                selectText='Select brands'
-                onSelectedItemsChange={setSelectedBrands}
-                selectedItems={selectedBrands}
-                showDropDowns={true}
-                showChips={false}
-              />
+            {/* Custom Brands Dropdown */}
+            <View style={{ marginBottom: 0.4, zIndex: 20 }}>
+              {/* Removed: <Text style={{ marginBottom: 5 }}>Brands</Text> */}
+              <TouchableOpacity onPress={() => { setBrandDropdownOpen(!brandDropdownOpen); setCarTypeDropdownOpen(false); }} style={styles.dropdownHeader}>
+                <Text style={[styles.dropdownHeaderTex, styles.text]}>Brands</Text>
+                <Icon name={brandDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color="#ACACAC" />
+              </TouchableOpacity>
+              {brandDropdownOpen && (
+                <ScrollView style={styles.dropdownListContainer}>
+                  {brandSelectorItems.map(brand => (
+                    <TouchableOpacity
+                      key={brand.id}
+                      onPress={() => handleBrandSelect(brand.id)}
+                      style={[
+                        styles.dropdownItem,
+                        selectedBrands.includes(brand.id) && styles.dropdownItemSelected
+                      ]}
+                    >
+                      <Text style={[styles.text, selectedBrands.includes(brand.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
+                        {brand.name}
+                      </Text>
+                      {selectedBrands.includes(brand.id) && <Icon name="check" size={16} color="#007bff" />}
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              )}
             </View>
       
-            {/* Example: Car Types Dropdown */}
-            <View style={{ marginBottom: 15 }}>
-              <Text style={{ marginBottom: 5 }}>Car types</Text>
-              <SectionedMultiSelect
-                items={carTypeSelectorItems}
-                IconRenderer={Icon}
-                uniqueKey='id'
-                selectText='Select car types'
-                onSelectedItemsChange={setSelectedTypes}
-                selectedItems={selectedTypes}
-                showDropDowns={true}
-                showChips={false}
-              />
+            {/* Custom Car Types Dropdown */}
+            <View style={{ marginBottom: 15, zIndex: 10 }}>
+              {/* Removed: <Text style={{ marginBottom: 5 }}>Car types</Text> */}
+              <TouchableOpacity onPress={() => { setCarTypeDropdownOpen(!carTypeDropdownOpen); setBrandDropdownOpen(false); }} style={styles.dropdownHeader}>
+                <Text style={[styles.dropdownHeaderTex, styles.text]}>Car Types</Text>
+                <Icon name={carTypeDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color="#ACACAC" />
+              </TouchableOpacity>
+              {carTypeDropdownOpen && (
+                <ScrollView style={styles.dropdownListContainer}>
+                  {carTypeSelectorItems.map(type => (
+                    <TouchableOpacity
+                      key={type.id}
+                      onPress={() => handleCarTypeSelect(type.id)}
+                      style={[
+                        styles.dropdownItem,
+                        selectedTypes.includes(type.id) && styles.dropdownItemSelected
+                      ]}
+                    >
+                      <Text style={[styles.text, selectedTypes.includes(type.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
+                        {type.name}
+                      </Text>
+                      {selectedTypes.includes(type.id) && <Icon name="check" size={16} color="#007bff" />}
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+              )}
             </View>
       
-            {/* You can add more dropdowns or filters here if needed */}
-      
-            {/* Optionally: Add a "Clear all filters" button here */}
-            <TouchableOpacity
-              style={{
-                marginTop: 20,
-                backgroundColor: '#e6e6e6',
-                padding: 10,
-                borderRadius: 10,
-                alignItems: 'center'
-              }}
-              onPress={() => {
-                setSelectedBrands([]);
-                setSelectedTypes([]);
-              setSearchQuery('');
-            }}>
-            <Text>Clear all filters</Text>
-          </TouchableOpacity>
+            {/* Removed old "Clear all filters" button */}
           
-          {/* Optionally: Add an "Apply" button if you want to only filter after closing */}
         </View>
       </View>
     </Modal>
 
     <GlobalContainer>
-      <Text style={[styles.text, styles.heading]}>Discover excellence</Text>
-
       <TouchableOpacity
         onPress={() => setFiltersVisible(true)}
         style={{ position: 'absolute', top: 10, right: 10, zIndex: 100 }}>
@@ -260,43 +393,6 @@ const HomeScreen = ({navigation}) => {
           </TouchableOpacity>
       </View>
 
-        {/* section with selected filters and clear button */}
-        <View style={styles.filterList}>
-          {/* Selected filters shown with x to remove*/}
-        <ScrollView horizontal style={styles.selectedFiltersContainer}>
-            {selectedBrands.map((brandId) => ( 
-            <TouchableOpacity
-              key={brandId}
-              style={styles.selectedFilter}
-              onPress={() => setSelectedBrands(selectedBrands.filter((id) => id !== brandId))}
-            > 
-              <Text style={styles.text}>{brandNames[brandId]} ✖</Text>
-            </TouchableOpacity>
-            ))}
-
-          {selectedTypes.map((typeId) => (
-            <TouchableOpacity
-              key={typeId}
-              style={styles.selectedFilter}
-              onPress={() => setSelectedTypes(selectedTypes.filter((id) => id !== typeId))}
-            >
-              <Text style={styles.text} >{carTypeNames[typeId]} ✖</Text>
-            </TouchableOpacity>
-          ))}
-          </ScrollView>
-
-         {/* Clear all filters button */}
-        <TouchableOpacity
-          style={styles.clearFiltersButton}
-          onPress={() => {
-            setSelectedBrands([]);
-            setSelectedTypes([]);
-            setSearchQuery("");
-          }}
-        >
-         <Text style={styles.text} >Clear all</Text>
-        </TouchableOpacity>
-        </View>
         {/* Product cards */}
         <ScrollView style={styles.cardContainer}>
             <View style={styles.row}>   
@@ -329,43 +425,13 @@ const styles = StyleSheet.create({
       width: '100%',
       marginTop: 20,
     },
-    row: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-around',
-    },
-    filterList: {
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      flexWrap: 'wrap',
-      borderWidth: 1,
-      borderColor: '#ACACAC',
-      borderRadius: 5,
-      minHeight: 50,
-      maxWidth: '100%',
-      alignItems: 'center',
-      alignContent: 'center',
-    },
-    selectedFiltersContainer: {
-      flexWrap: 'wrap',
-      maxWidth: '80%',
-    },
-    selectedFilter: {
-      borderWidth: 1,
-      borderColor: '#ACACAC',
-      borderRadius: 5,
-      justifyContent: 'center',
-      padding: 5,
-      marginRight: 5,
-    },
     searchContainer: {
       flexDirection: 'row',
       borderWidth: 1,
       borderColor: '#ACACAC',
       maxWidth: '100%',
-      padding: 5,
       alignItems: 'center',
-      maxHeight: 50,
+      maxHeight: 44,
       justifyContent: 'space-between',
       borderRadius: 5,
     },
@@ -381,7 +447,105 @@ const styles = StyleSheet.create({
       fontSize: 20,
       // color: '#ACACAC',
     },
-
+    // Styles for custom dropdown
+    dropdownHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 10,
+      borderWidth: 1,
+      borderColor: '#ACACAC',
+      borderRadius: 5,
+    },
+    dropdownHeaderText: {
+      flex: 1, // Allows text to wrap if too long
+    },
+    dropdownListContainer: {
+      borderWidth: 1,
+      borderColor: colors.ghosted,
+      borderTopWidth: 0,
+      borderRadius: 5,
+      borderTopLeftRadius: 0,
+      borderTopRightRadius: 0,
+    },
+    dropdownItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#eee',
+    },
+    dropdownItemText: {
+      // Add styles if needed
+    },
+    dropdownItemSelected: {
+      // backgroundColor: '#e6f7ff', // Optional: highlight selected items
+    },
+    dropdownItemSelectedText: {
+      fontWeight: 'bold', // Optional: make selected text bold
+      color: '#007bff',
+    },
+    // Styles for Modal
+    modalView: {
+      ...layoutStyles.FullWindowOverlay,
+    },
+    modalCloseButton: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      zIndex: 101, // Ensure close button is on top
+    },
+    modalTitle: {
+      fontWeight: 'bold',
+      fontSize: 20,
+      marginBottom: 20,
+      textAlign: 'center',
+    },
+    // Styles for Selected Filters Chips Area
+    selectedFiltersSection: {
+      marginBottom: 15,
+      paddingBottom: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#eee',
+    },
+    selectedFiltersHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 8,
+    },
+    selectedFiltersTitle: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: '#555',
+    },
+    clearAllChipButton: {
+      paddingVertical: 4,
+      paddingHorizontal: 8,
+      backgroundColor: '#f0f0f0',
+      borderRadius: 15,
+    },
+    clearAllChipButtonText: {
+      fontSize: 12,
+      color: '#333',
+    },
+    selectedFiltersContainerChips: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+    },
+    filterChip: {
+      ...buttonStyles.chip,
+    },
+    filterChipText: {
+      ...textStyles.chipText,
+    },
+    filterChipRemove: {
+      fontSize: 13,
+      color: '#777',
+      fontWeight: 'bold',
+    }
   });
   
 
