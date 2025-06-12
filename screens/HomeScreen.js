@@ -1,13 +1,13 @@
 import React, {useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from 'react-native'; 
+import { Modal, ScrollView, StyleSheet, Text, TextInput, Touchable, TouchableOpacity, View } from 'react-native'; 
 import ProductCard from '../components/ProductCard.js';
-import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
+import SectionedMultiSelect from 'react-native-sectioned-multi-select'; 
+import GlobalContainer from '../components/GlobalContainer.js'; // Added this import
 import layout from '../styles/layout.js';
 import textStyles from '../styles/text.js';
 import buttonStyles from '../styles/button.js';
-
 
 
 const brandNames = {
@@ -50,7 +50,8 @@ const HomeScreen = ({navigation}) => {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOption, setSortOption] = useState("price-asc");
-
+  const [filtersVisible, setFiltersVisible] = useState(false);
+  
   useEffect(() => {
     fetch(
       "https://api.webflow.com/v2/sites/67ac9ae63a5b794c54acd2f7/products",
@@ -68,7 +69,7 @@ const HomeScreen = ({navigation}) => {
             id: item.product.id,
             title: item.product.fieldData.name,
             subtitle: item.product.fieldData.description,
-            price: (item.skus[0]?.fieldData.price.value || 0) / 100, // Convert cents to dollars
+            price: (item.skus[0]?.fieldData.price.value || 0) / 100,
             image: { uri: item.skus[0]?.fieldData["main-image"]?.url },
             categories: item.product.fieldData.category || [],
           }))  
@@ -89,81 +90,187 @@ const HomeScreen = ({navigation}) => {
 
       return brandMatch && typeMatch && searchMatch;
     });
-
-    const availableBrands = new Set();
-    const availableTypes = new Set();
-
+  
+    // Determine which brands and types have at least one product in the entire dataset
+    const allBrandsWithProducts = new Set();
+    const allTypesWithProducts = new Set();
+    products.forEach(product => {
+        (product.categories || []).forEach(catId => {
+            if (brandNames[catId] !== undefined && catId !== "") { // Ensure it's a defined brand and not the "All" placeholder
+                allBrandsWithProducts.add(catId);
+            }
+            if (carTypeNames[catId] !== undefined && catId !== "") { // Ensure it's a defined type and not the "All" placeholder
+                allTypesWithProducts.add(catId);
+            }
+        });
+    });
+  
+    // Dynamically calculate available brands and types based on current selections
+    const availableBrands = new Set(); // Brands available given selectedTypes
+    const availableTypes = new Set();  // Types available given selectedBrands
+  
     products.forEach((p) => {
-      if (selectedTypes.length === 0 || selectedTypes.some((type) => p.categories.includes(type))){
-        p.categories.forEach((c) => availableBrands.add(c));
+      const productCategories = p.categories || [];
+      // Determine if this product's brands should be added to the available set
+      if (selectedTypes.length === 0 || selectedTypes.some(typeId => productCategories.includes(typeId))) {
+        productCategories.forEach(catId => {
+          if (brandNames[catId] !== undefined && catId !== "") { // Is a known brand and not the "All" ID
+            availableBrands.add(catId);
+          }
+        });
       }
-      if (selectedBrands.length ===0 || selectedBrands.some((brand) => p.categories.includes(brand))) {
-        p.categories.forEach((c) => availableTypes.add(c));
+      // Determine if this product's types should be added to the available set
+      if (selectedBrands.length === 0 || selectedBrands.some(brandId => productCategories.includes(brandId))) {
+        productCategories.forEach(catId => {
+          if (carTypeNames[catId] !== undefined && catId !== "") { // Is a known type and not the "All" ID
+            availableTypes.add(catId);
+          }
+        });
       }
     });
+  
+    // Prepare items for the brand selector
+    const brandSelectorItems = Object.entries(brandNames)
+        .filter(([id, name]) => {
+            if (id === "") return false; // Exclude "All categories" from selectable items here
+            // Show brand if it generally has products AND (no types are selected OR it's available with selected types)
+            return allBrandsWithProducts.has(id) &&
+                   (selectedTypes.length === 0 || availableBrands.has(id));
+        })
+        .map(([id, name]) => ({ id, name }));
+  
+    // Prepare items for the car type selector
+    const carTypeSelectorItems = Object.entries(carTypeNames)
+        .filter(([id, name]) => {
+            if (id === "") return false; // Exclude "All car types" from selectable items here
+            // Show type if it generally has products AND (no brands are selected OR it's available with selected brands)
+            return allTypesWithProducts.has(id) &&
+                   (selectedBrands.length === 0 || availableTypes.has(id));
+        })
+        .map(([id, name]) => ({ id, name }));
     
   return (
-    <View style={styles.container}>
-        <Text style={styles.heading}>Discover excellence</Text>
+    <>
+    <Modal
+      visible={filtersVisible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={() => setFiltersVisible(false)}
+      >
+      <View style={{
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <View style={{
+          width: '90%',
+          backgroundColor: '#fff',
+          borderRadius: 20,
+          padding: 20
+        }}>
+          {/* Close Button */}
+          <TouchableOpacity
+            onPress={() => setFiltersVisible(false)}
+            style={{ position: 'absolute', top: 10, right: 10 }}>
+            <Text style={{ fontSize: 22 }}>✖</Text>
+          </TouchableOpacity>
+          {/* --- FILTERS GO HERE --- */}
+          <Text style={{ fontWeight: 'bold', fontSize: 20, marginBottom: 20 }}>Filters</Text>
+      
+            {/* Example: Brands Dropdown */}
+            <View style={{ marginBottom: 15 }}>
+              <Text style={{ marginBottom: 5 }}>Brands</Text>
+              <SectionedMultiSelect
+                items={brandSelectorItems}
+                IconRenderer={Icon}
+                uniqueKey='id'
+                selectText='Select brands'
+                onSelectedItemsChange={setSelectedBrands}
+                selectedItems={selectedBrands}
+                showDropDowns={true}
+                showChips={false}
+              />
+            </View>
+      
+            {/* Example: Car Types Dropdown */}
+            <View style={{ marginBottom: 15 }}>
+              <Text style={{ marginBottom: 5 }}>Car types</Text>
+              <SectionedMultiSelect
+                items={carTypeSelectorItems}
+                IconRenderer={Icon}
+                uniqueKey='id'
+                selectText='Select car types'
+                onSelectedItemsChange={setSelectedTypes}
+                selectedItems={selectedTypes}
+                showDropDowns={true}
+                showChips={false}
+              />
+            </View>
+      
+            {/* You can add more dropdowns or filters here if needed */}
+      
+            {/* Optionally: Add a "Clear all filters" button here */}
+            <TouchableOpacity
+              style={{
+                marginTop: 20,
+                backgroundColor: '#e6e6e6',
+                padding: 10,
+                borderRadius: 10,
+                alignItems: 'center'
+              }}
+              onPress={() => {
+                setSelectedBrands([]);
+                setSelectedTypes([]);
+              setSearchQuery('');
+            }}>
+            <Text>Clear all filters</Text>
+          </TouchableOpacity>
+          
+          {/* Optionally: Add an "Apply" button if you want to only filter after closing */}
+        </View>
+      </View>
+    </Modal>
+
+    <GlobalContainer>
+      <Text style={[styles.text, styles.heading]}>Discover excellence</Text>
+
+      <TouchableOpacity
+        onPress={() => setFiltersVisible(true)}
+        style={{ position: 'absolute', top: 10, right: 10, zIndex: 100 }}>
+        <Icon name="filter-list" size={30} color="#ACACAC" />
+        </TouchableOpacity>
         
         {/*search bar with clear button*/}
-        <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search for a model..."
-          placeholderTextColor="#999"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
+      <View style={styles.searchContainer}>
+        <ScrollView horizontal>
+          <TextInput
+            style={[styles.text, styles.searchInput]}
+            placeholder="Search for a model..."
+            placeholderTextColor="#999"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
           />
-          {searchQuery !== "" && (
-            <TouchableOpacity
-            style={{ width: 56, height: 56, justifyContent: 'center', alignItems: 'center' }}
-            onPress={() => setSearchQuery("")}
-            >
-              <Text style={{ fontSize: 18 }}>✖</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+          </ScrollView>  
+          <TouchableOpacity
+          style={styles.clearInputButton}
+          onPress={() => setSearchQuery("")}
+          >
+          <Text style={[styles.text, styles.closeIcon]}>✖</Text>
+          </TouchableOpacity>
+      </View>
 
-        {/* Multi-select for brands*/}
-        <SectionedMultiSelect
-          items={Object.entries(brandNames).map(([id, name]) => ({
-            id,
-            name,
-            disabled: !availableBrands.has(id),
-          }))}
-          IconRenderer={Icon}
-          uniqueKey='id'
-          selectText='Selct brands'
-          onSelectedItemsChange={setSelectedBrands}
-          selectedItems={selectedBrands}
-          showDropDowns={true}   
-        />
-          
-          {/* Multi-select for car types*/}
-        <SectionedMultiSelect
-          items={Object.entries(carTypeNames).map(([id, name]) => ({
-            id,
-            name,
-            disabled: !availableTypes.has(id),
-          }))}
-          IconRenderer={Icon}
-          uniqueKey='id'
-          selectText='Select car types'
-          onSelectedItemsChange={setSelectedTypes}
-          selectedItems={selectedTypes}
-          showDropDowns={true}
-          />
-
+        {/* section with selected filters and clear button */}
+        <View style={styles.filterList}>
           {/* Selected filters shown with x to remove*/}
-          <View style={styles.selectedFiltersContainer}>
+        <ScrollView horizontal style={styles.selectedFiltersContainer}>
             {selectedBrands.map((brandId) => ( 
             <TouchableOpacity
               key={brandId}
               style={styles.selectedFilter}
               onPress={() => setSelectedBrands(selectedBrands.filter((id) => id !== brandId))}
             > 
-              <Text>{brandNames[brandId]} ✖</Text>
+              <Text style={styles.text}>{brandNames[brandId]} ✖</Text>
             </TouchableOpacity>
             ))}
 
@@ -173,12 +280,12 @@ const HomeScreen = ({navigation}) => {
               style={styles.selectedFilter}
               onPress={() => setSelectedTypes(selectedTypes.filter((id) => id !== typeId))}
             >
-              <Text>{carTypeNames[typeId]} ✖</Text>
+              <Text style={styles.text} >{carTypeNames[typeId]} ✖</Text>
             </TouchableOpacity>
           ))}
-          </View>
+          </ScrollView>
 
-        {/* Clear all filters button */}
+         {/* Clear all filters button */}
         <TouchableOpacity
           style={styles.clearFiltersButton}
           onPress={() => {
@@ -187,9 +294,9 @@ const HomeScreen = ({navigation}) => {
             setSearchQuery("");
           }}
         >
-         <Text>Clear all</Text>
+         <Text style={styles.text} >Clear all</Text>
         </TouchableOpacity>
-
+        </View>
         {/* Product cards */}
         <ScrollView style={styles.cardContainer}>
             <View style={styles.row}>   
@@ -203,24 +310,20 @@ const HomeScreen = ({navigation}) => {
             </View>
           </ScrollView>
         <StatusBar style="auto" />
-    </View>
+    </GlobalContainer>
+    </>
   );
 };
 
 
 const styles = StyleSheet.create({
-    container: {
-      ...layout.container,
+    text: {
+      ...textStyles.defaultText,
     },
     heading: {
       fontSize: 24,
       fontWeight: 'bold',
       marginTop: 20,
-    },
-    pickerContainer: {
-      width: '100%',
-      marginTop: 20,
-      paddingHorizontal: 20,
     },
     cardContainer: {
       width: '100%',
@@ -231,6 +334,54 @@ const styles = StyleSheet.create({
       flexWrap: 'wrap',
       justifyContent: 'space-around',
     },
+    filterList: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      flexWrap: 'wrap',
+      borderWidth: 1,
+      borderColor: '#ACACAC',
+      borderRadius: 5,
+      minHeight: 50,
+      maxWidth: '100%',
+      alignItems: 'center',
+      alignContent: 'center',
+    },
+    selectedFiltersContainer: {
+      flexWrap: 'wrap',
+      maxWidth: '80%',
+    },
+    selectedFilter: {
+      borderWidth: 1,
+      borderColor: '#ACACAC',
+      borderRadius: 5,
+      justifyContent: 'center',
+      padding: 5,
+      marginRight: 5,
+    },
+    searchContainer: {
+      flexDirection: 'row',
+      borderWidth: 1,
+      borderColor: '#ACACAC',
+      maxWidth: '100%',
+      padding: 5,
+      alignItems: 'center',
+      maxHeight: 50,
+      justifyContent: 'space-between',
+      borderRadius: 5,
+    },
+    searchInput: {
+      fontSize: 16,
+      // color: '#ACACAC',
+    },
+    clearInputButton: {
+      width: '7%',
+      alignContent: 'center',
+    },
+    closeIcon: {
+      fontSize: 20,
+      // color: '#ACACAC',
+    },
+
   });
   
 

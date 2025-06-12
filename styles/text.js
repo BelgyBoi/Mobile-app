@@ -2,26 +2,33 @@ import { StyleSheet } from 'react-native';
 import colors from './colors.js';
 
 const textStyles = StyleSheet.create({
+    defaultText: {
+        fontFamily: 'SpaceGrotesk_400Regular',
+        color: colors.primary,
+        fontSize: 14,
+    },
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        color: colors.primary,
         marginBottom: 10,
+    },
+    header: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 5,
     },
     subtitle: {
         fontSize: 18,
-        color: colors.secondary,
         marginBottom: 5,
     },
     bodyText: {
-        fontSize: 16,
-        color: colors.secondary,
+        fontSize: 14,
         lineHeight: 24,
     },
     buttonText: {
         fontSize: 16,
-        color: colors.background,
         textAlign: 'center',
+        color: colors.background,
     },
 });
 export default textStyles;

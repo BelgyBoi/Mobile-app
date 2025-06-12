@@ -2,12 +2,14 @@ import { StyleSheet } from 'react-native';
 import colors from './colors.js';
 
 const buttonStyles = StyleSheet.create({
-    primaryButton: {
+    defaultButton: {
         backgroundColor: colors.secondary,
         padding: 10,
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
+        width: '50%',  
+        minHeight: 56,
     },
     secondaryButton: {
         backgroundColor: colors.secondary,
@@ -15,10 +17,6 @@ const buttonStyles = StyleSheet.create({
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    buttonText: {
-        color: colors.background,
-        fontSize: 16,
     },
 });
 export default buttonStyles;

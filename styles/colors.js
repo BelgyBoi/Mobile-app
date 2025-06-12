@@ -1,7 +1,8 @@
 const colors = {
-  primary: '#6200EE',
-  secondary: '#333333',
+  primary: '#333333',
+  secondary: '#A3322B',
   background: '#FFFFFF',
+  placeholder: '#ACACAC',
 };
 
 export default colors;

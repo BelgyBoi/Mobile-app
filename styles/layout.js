@@ -1,11 +1,14 @@
 import { StyleSheet } from 'react-native';
 import colors from './colors.js';
 
-const layout= StyleSheet.create({
-    container: {
-        flex: 1,
+const layoutStyles= StyleSheet.create({
+    innerContainer: {
         backgroundColor: colors.background,
-        padding: 20,
+        borderRadius: 5,
+        padding: 15,
+        flexDirection: 'column',
+        alignItems: 'center',
+        marginBottom: 20,
     },
     row: {
         flexDirection: 'row',
@@ -19,5 +22,5 @@ const layout= StyleSheet.create({
     },
 
 });
-export default layout;
+export default layoutStyles;
 
