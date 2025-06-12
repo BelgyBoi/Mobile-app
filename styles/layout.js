@@ -1,17 +1,18 @@
 import { StyleSheet } from 'react-native';
 import colors from './colors.js';
 import { BlurView } from 'expo-blur';   
-import { FullWindowOverlay } from 'react-native-screens';
+import { FullWindowOverlay, SearchBar } from 'react-native-screens';
 
 const layoutStyles= StyleSheet.create({
-    innerContainer: {
+    outer: {
+        flex: 1,
         backgroundColor: colors.background,
-        borderRadius: 5,
-        padding: 30,
-        flexDirection: 'column',
-        alignItems: 'center',
-        marginBottom: 20,
-        justifyContent: 'space-around',
+    },
+    innerContainer: {
+        flex: 1,
+        backgroundColor: colors.background,
+        padding: 15,
+        borderRadius: 10,
     },
     centered: {
         flex: 1,
@@ -27,6 +28,21 @@ const layoutStyles= StyleSheet.create({
         borderRadius: 10,
         height: '95%',
         width: '95%',
+    },
+    closeIcon: {
+        padding: 5,
+        borderRadius: 15,
+    },
+    SearchBar: {
+        backgroundColor: colors.background,
+        flexDirection: 'row',
+        borderWidth: 1,
+        borderColor: '#ACACAC',
+        width: '85%',
+        alignItems: 'center',
+        maxHeight: 44,
+        justifyContent: 'space-between',
+        borderRadius: 5,
     },
 
 });

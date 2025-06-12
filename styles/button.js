@@ -29,9 +29,6 @@ const buttonStyles = StyleSheet.create({
         marginBottom: 5, // backward compatibility if gap is not supported
     },
     closeButton: {
-        position: 'absolute',
-        top: 10,
-        right: 10,
         backgroundColor: colors.secondary,
         padding: 5,
         borderRadius: 15,

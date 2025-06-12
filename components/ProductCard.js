@@ -5,6 +5,7 @@ import textStyles from '../styles/text.js';
 import buttonStyles from '../styles/button.js';
 import layoutStyles from '../styles/layout.js';
 import Spacer from '../globalElements/Spacer.js';
+import colors from '../styles/colors.js';
 
 
 const ProductCard = ({ title, subtitle, price, image, onPress }) => {
@@ -30,21 +31,18 @@ const ProductCard = ({ title, subtitle, price, image, onPress }) => {
 const styles = StyleSheet.create({
     card: {
         ...layoutStyles.innerContainer,
-        backgroundColor: '#ff5555',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
+        backgroundColor: colors.background,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     text: {
         ...textStyles.defaultText,
     },
     title: {
         ...textStyles.header,
+    },
+    description: {
+        textAlign: 'center',
     },
     price: {
         ...textStyles.highlight,
