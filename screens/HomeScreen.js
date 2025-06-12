@@ -307,7 +307,6 @@ const HomeScreen = ({navigation}) => {
       
             {/* Custom Brands Dropdown */}
             <View style={{ marginBottom: 0.4, zIndex: 20 }}>
-              {/* Removed: <Text style={{ marginBottom: 5 }}>Brands</Text> */}
               <TouchableOpacity onPress={() => { setBrandDropdownOpen(!brandDropdownOpen); setCarTypeDropdownOpen(false); }} style={styles.dropdownHeader}>
                 <Text style={[styles.dropdownHeaderTex, styles.text]}>Brands</Text>
                 <Icon name={brandDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color="#ACACAC" />
@@ -335,7 +334,6 @@ const HomeScreen = ({navigation}) => {
       
             {/* Custom Car Types Dropdown */}
             <View style={{ marginBottom: 15, zIndex: 10 }}>
-              {/* Removed: <Text style={{ marginBottom: 5 }}>Car types</Text> */}
               <TouchableOpacity onPress={() => { setCarTypeDropdownOpen(!carTypeDropdownOpen); setBrandDropdownOpen(false); }} style={styles.dropdownHeader}>
                 <Text style={[styles.dropdownHeaderTex, styles.text]}>Car Types</Text>
                 <Icon name={carTypeDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color="#ACACAC" />

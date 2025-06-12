@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import HomeScreen from './screens/HomeScreen.js';
 import DetailsScreen from './screens/ProductDetail.js';
-import { useFonts, SpaceGrotesk_400Regular, SpaceGrotesk_700Bold } from '@expo-google-fonts/space-grotesk';
+import { useFonts, SpaceGrotesk_300Light, SpaceGrotesk_400Regular, SpaceGrotesk_500Medium, SpaceGrotesk_600SemiBold, SpaceGrotesk_700Bold } from '@expo-google-fonts/space-grotesk';
 import AppLoading from 'expo-app-loading';
 import colors from './styles/colors.js';
 import HeaderBar from './globalElements/HeaderBar.js';
@@ -13,7 +13,10 @@ const stack = createStackNavigator();
 
 export default function App() {
   let [fontsLoaded] = useFonts({
+    SpaceGrotesk_300Light,
     SpaceGrotesk_400Regular,
+    SpaceGrotesk_500Medium,
+    SpaceGrotesk_600SemiBold,
     SpaceGrotesk_700Bold,
   });
 
