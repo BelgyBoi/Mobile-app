@@ -1,5 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import GlobalContainer from '../globalElements/GlobalContainer';
+import ViewPort from '../globalElements/ViewPort';
 
 const DetailsScreen = ({ route }) => {
   const { title, subtitle, price } = route.params;
@@ -12,23 +14,27 @@ const DetailsScreen = ({ route }) => {
     }
   };
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
-      <Text style={styles.price}>€{price}</Text>
-    
-      <View style={styles.quantityContainer}>
-        <TouchableOpacity style={styles.button} onPress={decreaseQuantity}>
-          <Text style={styles.buttonText}>-</Text>
-        </TouchableOpacity>
+    <ViewPort>
+      <GlobalContainer>
+        <View style={styles.container}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.subtitle}>{subtitle}</Text>
+          <Text style={styles.price}>€{price}</Text>
 
-        <Text style={styles.quantity}>{quantity}</Text>
+          <View style={styles.quantityContainer}>
+            <TouchableOpacity style={styles.button} onPress={decreaseQuantity}>
+              <Text style={styles.buttonText}>-</Text>
+            </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button} onPress={increaseQuantity}>
-          <Text style={styles.buttonText}>+</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+            <Text style={styles.quantity}>{quantity}</Text>
+
+            <TouchableOpacity style={styles.button} onPress={increaseQuantity}>
+              <Text style={styles.buttonText}>+</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </GlobalContainer>
+    </ViewPort>
   );
 }
 

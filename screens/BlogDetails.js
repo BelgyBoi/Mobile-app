@@ -1,8 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
-import GlobalContainer from '../globalElements/GlobalContainer.js';
 import colors from '../styles/colors.js';
-import textStyles from '../styles/text.js';
 
 const BlogDetailsScreen = ({ route }) => {
   // Assuming the blog post object is passed via route params
@@ -11,45 +9,42 @@ const BlogDetailsScreen = ({ route }) => {
   // Fallback for missing blog post data
   if (!blogPost) {
     return (
-      <GlobalContainer>
-        <View style={styles.container}>
-          <Text style={styles.errorText}>Blog post not found.</Text>
-        </View>
-      </GlobalContainer>
+      <View style={styles.container}>
+        <Text style={styles.errorText}>Blog post not found.</Text>
+      </View>
     );
   }
 
   const { title, bodyText, author, date } = blogPost;
 
   return (
-    <GlobalContainer>
-      <ScrollView style={styles.scrollContainer}>
-        <View style={styles.container}>
-          <Text style={[styles.title, textStyles.heading1]}>{title || 'No Title'}</Text>
-          
-          {author && (
-            <Text style={[styles.metaText, textStyles.caption]}>
-              By: {author}
-            </Text>
-          )}
-          {date && (
-            <Text style={[styles.metaText, textStyles.caption]}>
-              Published: {new Date(date).toLocaleDateString()}
-            </Text>
-          )}
-
-          <View style={styles.separator} />
-
-          <Text style={[styles.body, textStyles.defaultText]}>{bodyText || 'No content available.'}</Text>
-        </View>
-      </ScrollView>
-    </GlobalContainer>
+    <ScrollView style={styles.scrollContainer}>
+      <View style={styles.container}>
+        <Text style={styles.title}>{title || 'No Title'}</Text>
+        
+        {author && (
+          <Text style={styles.metaText}>
+            By: {author}
+          </Text>
+        )}
+        {date && (
+          <Text style={styles.metaText}>
+            Published: {new Date(date).toLocaleDateString()}
+          </Text>
+        )}
+  
+        <View style={styles.separator} />
+      
+        <Text style={styles.body}>{bodyText || 'No content available.'}</Text>
+      </View>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
+    backgroundColor: colors.background,
   },
   container: {
     flex: 1,
@@ -57,32 +52,32 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   title: {
+    fontSize: 24,
     color: colors.primary,
     marginBottom: 10,
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   metaText: {
-    color: colors.textSecondary,
+    color: colors.ghosted,
     fontSize: 14,
     marginBottom: 5,
     textAlign: 'center',
   },
   separator: {
     height: 1,
-    backgroundColor: colors.border,
+    backgroundColor: colors.ghosted,
     marginVertical: 15,
   },
   body: {
-    color: colors.text,
+    color: colors.primary,
     fontSize: 16,
-    lineHeight: 24,
-    textAlign: 'justify', // Or 'left' if preferred
   },
   errorText: {
-    fontSize: 18,
     color: 'red',
+    fontSize: 16,
     textAlign: 'center',
-    marginTop: 50,
+    fontWeight: 'bold',
   },
 });
 

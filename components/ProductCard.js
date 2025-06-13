@@ -6,57 +6,31 @@ import buttonStyles from '../styles/button.js';
 import layoutStyles from '../styles/layout.js';
 import Spacer from '../globalElements/Spacer.js';
 import colors from '../styles/colors.js';
+import ComponentContainer from '../globalElements/ComponentContainer.js';
 
 
 const ProductCard = ({ title, subtitle, price, image, onPress }) => {
     const navigation = useNavigation();
     
     return (
-        <View style={styles.card}>
-            <Image source={image} style={styles.image} />
-            <Text style={[styles.text, styles.title]}>{title}</Text>
+        <ComponentContainer>
+            <Image source={image} style={layoutStyles.image} />
+            <Text style={[styles.text, textStyles.header]}>{title}</Text>
             <Spacer/>
-            <Text style={[styles.text, styles.description]}>{subtitle}</Text>
-            <Spacer/>
-            <Text style={[styles.text, styles.price]}>€{price}</Text>
+            <Text style={[styles.text, textStyles.price]}>€{price}</Text>
             <Spacer/>
             
-            <TouchableOpacity style={styles.button} onPress={onPress}>
-            <Text style={[styles.text, styles.buttonText]}>View Product</Text>
+            <TouchableOpacity style={buttonStyles.defaultButton} onPress={onPress}>
+            <Text style={[styles.text, textStyles.buttonText]}>View Product</Text>
             </TouchableOpacity>
-        </View>
+        </ComponentContainer>
     );
 };
 
 const styles = StyleSheet.create({
-    card: {
-        ...layoutStyles.innerContainer,
-        backgroundColor: colors.background,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
     text: {
         ...textStyles.defaultText,
-    },
-    title: {
-        ...textStyles.header,
-    },
-    description: {
-        textAlign: 'center',
-    },
-    price: {
-        ...textStyles.highlight,
-    },
-    button: {
-        ...buttonStyles.defaultButton,
-    },
-    buttonText: {
-        ...textStyles.buttonText,
-    },
-    image: {
-        width: '100%',
-        height: 200,
-        resizeMode: 'contain',
+        ...textStyles.centerAlign,
     },
 });
 

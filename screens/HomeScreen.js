@@ -1,105 +1,103 @@
 import React from 'react';
-
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, Dimensions } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import GlobalContainer from '../globalElements/GlobalContainer.js';
 import colors from '../styles/colors.js';
 import textStyles from '../styles/text.js';
+import layoutStyles from '../styles/layout.js';
+import ViewPort from '../globalElements/ViewPort.js'; // Importing ViewPort for consistent layout
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
-// Placeholder for hero image - replace with your actual image path
-const heroImage = require('../assets/Volkswagen_group_logo.png'); // Example, replace with a relevant hero image
+const { width: screenWidth } = Dimensions.get('window');
+
+const NAV_LINKS = [
+  { id: '1', icon: <MaterialIcons name="directions-car" size={24} color={colors.primary} />, title: 'Browse Products', screen: 'ProductScreen' },
+  { id: '2', icon: <MaterialIcons name="article" size={24} color={colors.primary} />, title: 'Read Our Blog', screen: 'Blogs' },
+  { id: '3', icon: <Ionicons name="images-outline" size={24} color={colors.primary} />, title: 'View Gallery', screen: 'Gallery' },
+  { id: '4', icon: <Ionicons name="settings-outline" size={24} color={colors.primary} />, title: 'User Preferences', screen: 'Preferences' },
+];
+
+const HERO_HEIGHT = 240;
 
 const HomeScreen = ({ navigation }) => {
-  // Placeholder navigation links - update these with your actual screen names and routes
-  const navLinks = [
-    { id: '1', title: 'Browse All Cars', screen: 'ProductScreen' }, // Assuming ProductScreen shows all cars
-    { id: '2', title: 'Search Cars', screen: 'SearchScreen' }, // Placeholder for a dedicated search screen if you have one
-    { id: '3', title: 'My Favorites', screen: 'FavoritesScreen' }, // Placeholder
-    { id: '4', title: 'Account Settings', screen: 'SettingsScreen' }, // Placeholder
-    // Add more links as needed
-  ];
-
   return (
-    <GlobalContainer>
-      <ScrollView style={styles.container}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={[styles.headerText, textStyles.heading1]}>Welcome to Car Hub</Text>
-        </View>
-
-        {/* Hero Image */}
-        <View style={styles.heroContainer}>
-          <Image source={heroImage} style={styles.heroImage} resizeMode="contain" />
-        </View>
-
-        {/* Navigation Links */}
-        <View style={styles.navContainer}>
-          <Text style={[styles.navTitle, textStyles.heading2]}>Explore</Text>
-          {navLinks.map((link) => (
-            <TouchableOpacity
-              key={link.id}
-              style={styles.navLink}
-              onPress={() => navigation.navigate(link.screen, { /* parameters if any */ })}
-            >
-              <Text style={[styles.navLinkText, textStyles.defaultText]}>{link.title}</Text>
+    <View style={styles.root}>
+      {/* Hero Image with black-to-transparent gradient at the bottom */}
+      <View style={styles.heroContainer}>
+        <Image source={require('../assets/hero_section_image.png')} style={styles.heroImage} resizeMode="cover" />
+        <LinearGradient
+          colors={["#ffffff00", "#ffffffcc", "#fff"]} // Transparent to white, for a soft fade
+          style={styles.heroGradient}
+          locations={[0.5, 0.8, 1]}
+        />
+      </View>
+      {/* Navigation section */}
+      <View style={styles.menuSection}>
+        {NAV_LINKS.map((link, idx) => (
+          <View key={link.id}>
+            <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate(link.screen)}>
+              <View style={styles.menuIcon}>{link.icon}</View>
+              <Text style={styles.menuLabel}>{link.title}</Text>
             </TouchableOpacity>
-          ))}
-        </View>
-        <StatusBar style="auto" />
-      </ScrollView>
-    </GlobalContainer>
+            {idx < NAV_LINKS.length - 1 && <View style={styles.separator} />}
+          </View>
+        ))}
+      </View>
+      <StatusBar style="dark" />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  root: {
     flex: 1,
-    backgroundColor: colors.background,
-  },
-  header: {
-    paddingVertical: 20,
-    paddingHorizontal: 15,
-    alignItems: 'center',
-    backgroundColor: colors.primary, // Or your desired header background color
-  },
-  headerText: {
-    color: colors.white, // Assuming white text on primary color
-    fontWeight: 'bold',
+    backgroundColor: '#fff',
   },
   heroContainer: {
-    alignItems: 'center',
-    marginVertical: 20,
-    paddingHorizontal: 15,
+    width: '100%',
+    height: HERO_HEIGHT,
+    position: 'relative',
+    justifyContent: 'flex-start',
+    backgroundColor: '#fff',
   },
   heroImage: {
     width: '100%',
-    height: 200, // Adjust as needed
-    borderRadius: 10, // Optional: if you want rounded corners
+    height: '100%',
+    position: 'absolute',
+    top: 0,
+    left: 0,
   },
-  navContainer: {
-    paddingHorizontal: 15,
-    marginBottom: 20,
+  heroGradient: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: HERO_HEIGHT,
+    width: '100%',
   },
-  navTitle: {
-    marginBottom: 15,
-    textAlign: 'center',
-    color: colors.text,
+  menuSection: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    padding: 16,
   },
-  navLink: {
-    backgroundColor: colors.surface, // A light background for links
-    paddingVertical: 15,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    marginBottom: 10,
-    width: '100%', // Full width
-    alignItems: 'center', // Center text within the TouchableOpacity
-    borderWidth: 1,
-    borderColor: colors.border,
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
   },
-  navLinkText: {
-    color: colors.primary, // Link text color
-    fontWeight: '500',
-    fontSize: 16,
+  menuIcon: {
+    marginRight: 16,
+  },
+  menuLabel: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.primary,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: colors.ghosted,
+    marginVertical: 8,
   },
 });
 

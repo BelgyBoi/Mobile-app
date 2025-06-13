@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView, Image, Dimensions } from 'react-native';
 import GlobalContainer from '../globalElements/GlobalContainer.js';
+import ViewPort from '../globalElements/ViewPort.js';
 import colors from '../styles/colors.js';
 
 // Get screen dimensions
@@ -24,15 +25,17 @@ const imageSources = [
 
 const GalleryScreen = () => {
   return (
-    <GlobalContainer>
-      <ScrollView contentContainerStyle={styles.container}>
-        {imageSources.map(image => (
-          <View key={image.id} style={styles.imageContainer}>
-            <Image source={{ uri: image.uri }} style={styles.image} resizeMode="cover" />
-          </View>
-        ))}
-      </ScrollView>
-    </GlobalContainer>
+    <ViewPort>
+      <GlobalContainer>
+        <ScrollView contentContainerStyle={styles.container}>
+          {imageSources.map(image => (
+            <View key={image.id} style={styles.imageContainer}>
+              <Image source={{ uri: image.uri }} style={styles.image} resizeMode="cover" />
+            </View>
+          ))}
+        </ScrollView>
+      </GlobalContainer>
+    </ViewPort>
   );
 };
 

@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native';
 import colors from './colors.js';
 
 const textStyles = StyleSheet.create({
+
     defaultText: {
         fontFamily: 'SpaceGrotesk_400Regular',
         color: colors.primary,
@@ -10,7 +11,6 @@ const textStyles = StyleSheet.create({
     title: {
         fontSize: 24,
         fontWeight: 'bold',
-        marginBottom: 10,
     },
     highlight: {
         fontSize: 18,
@@ -20,12 +20,9 @@ const textStyles = StyleSheet.create({
     header: {
         fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 5,
     },
     subtitle: {
-        fontSize: 18,
-        marginBottom: 5,
-    },
+        fontSize: 18,    },
     bodyText: {
         fontSize: 14,
         lineHeight: 24,
@@ -35,10 +32,26 @@ const textStyles = StyleSheet.create({
         textAlign: 'center',
         color: colors.background,
     },
+    placeholderText: {
+        backgroundColor: colors.ghosted, // A light gray for placeholder
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     chipText: {
         fontSize: 14,
         color: colors.background,
         textAlign: 'center',
+    },
+    centerAlign: {
+        textAlign: 'center',
+    },
+    price: {
+        fontSize: 18,
+        color: colors.primary,
+        fontWeight: 'bold',
+    },
+    metaText: {
+        fontSize: 12,
     },
 });
 export default textStyles;

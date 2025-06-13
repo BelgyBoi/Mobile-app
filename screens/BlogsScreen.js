@@ -1,49 +1,45 @@
-
 import React, { useState, useMemo, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, ScrollView, TouchableOpacity } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
-import GlobalContainer from '../globalElements/GlobalContainer.js';
+import { StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
 import colors from '../styles/colors.js';
-import textStyles from '../styles/text.js';
-import layoutStyles from '../styles/layout.js';
-import CloseButton from '../globalElements/CloseButton.js';
-
-// Blog Post Card Component (Simplified)
-const BlogPostCard = ({ title, shortText, onPress }) => (
-  <TouchableOpacity style={styles.card} onPress={onPress}>
-    <Text style={[styles.cardTitle, textStyles.heading3]}>{title}</Text>
-    <Text style={[styles.cardShortText, textStyles.defaultText]}>{shortText}</Text>
-  </TouchableOpacity>
-);
+import BlogCard from '../components/BlogCard.js';
 
 const BlogsScreen = ({ navigation }) => {
-  const [blogPosts, setBlogPosts] = useState([]); // Initialize with empty array
+  const [blogPosts, setBlogPosts] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    // TODO: Replace with your actual API call
-    // const fetchBlogPosts = async () => {
-    //   try {
-    //     // const response = await fetch('YOUR_API_ENDPOINT_HERE');
-    //     // const data = await response.json();
-    //     // const formattedData = data.items.map(item => ({ // Adjust mapping based on your API structure
-    //     //   id: item.id, // Replace with actual ID key from your API data
-    //     //   title: item.title, // Replace with actual title key
-    //     //   shortText: item.shortText, // Replace with actual shortText key
-    //     //   bodyText: item.bodyText, // Replace with actual bodyText key
-    //     //   author: item.author, // Optional: replace with actual author key
-    //     //   date: item.date, // Optional: replace with actual date key
-    //     // }));
-    //     // setBlogPosts(formattedData);
-    //     console.log('API call placeholder: Fetch blog posts here and map them to the expected structure.');
-    //   } catch (error) {
-    //     console.error("Failed to fetch blog posts:", error);
-    //     // Optionally, set an error state here to display to the user
-    //   }
-    // };
-    // fetchBlogPosts();
-    console.log("useEffect triggered: This is where you'd fetch blog posts from an API.");
-  }, []); // Empty dependency array means this runs once on mount
+    fetch(
+      "https://api.webflow.com/v2/sites/67ac9ae63a5b794c54acd2f7/collections/67bdad5ab093c84c85dfd503/items?live=true",
+      {
+        headers: {
+          Authorization:
+          "Bearer 87929257d6887767501086aeed11c32ac4e586deadfd3dbf091789544ce74153",
+          "accept-version": "1.0.0",
+        },
+      }
+    )
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.items) {
+        setBlogPosts(
+          data.items.map((item) => ({
+            id: item.id,
+            title: item.fieldData?.name,
+            summary: item.fieldData?.["post-summary"],
+            bodyText: item.fieldData?.["blog-body-text"],
+            thumbnailUri: item.fieldData?.["thumbnail-image"]?.url || item.fieldData?.["main-image"]?.url,
+            mainImageUri: item.fieldData?.["main-image"]?.url,
+            slug: item.fieldData?.slug,
+            date: item.fieldData?.["publication-date"],
+            author: item.fieldData?.author,
+          }))
+        );
+      } else {
+        setBlogPosts([]);
+      }
+    })
+    .catch(() => setBlogPosts([]));
+  }, []);
 
   const filteredBlogPosts = useMemo(() => {
     if (!searchQuery) {
@@ -52,41 +48,34 @@ const BlogsScreen = ({ navigation }) => {
     const lowerCaseQuery = searchQuery.toLowerCase();
     return blogPosts.filter(post =>
       (post.title && post.title.toLowerCase().includes(lowerCaseQuery)) ||
-      (post.shortText && post.shortText.toLowerCase().includes(lowerCaseQuery)) ||
+      (post.slug && post.slug.toLowerCase().includes(lowerCaseQuery)) ||
+      (post.summary && post.summary.toLowerCase().includes(lowerCaseQuery)) ||
       (post.bodyText && post.bodyText.toLowerCase().includes(lowerCaseQuery))
     );
   }, [blogPosts, searchQuery]);
 
   return (
-    <GlobalContainer>
-      <View style={styles.topContainer}>
-        {/* Search bar with clear button */}
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={[styles.text, styles.searchInput]}
-            placeholder="Search blog posts..."
-            placeholderTextColor="#999"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-          />
-          {searchQuery.length > 0 && (
-            <CloseButton onPress={() => setSearchQuery('')} />
-          )}
-        </View>
+    <View style={styles.container}>
+      <View style={styles.searchBar}>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search blog posts..."
+          placeholderTextColor={colors.ghosted}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+        />
       </View>
-
-      {/* Blog Post cards */}
-      <ScrollView style={styles.cardContainer}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {filteredBlogPosts.length > 0 ? (
           filteredBlogPosts.map((post) => (
-            <BlogPostCard
-              key={post.id} // Ensure your API data provides a unique id for each post
-              title={post.title || 'No Title'} // Fallback for missing title
-              shortText={post.shortText || 'No short text available'} // Fallback for missing shortText
+            <BlogCard
+              key={post.id}
+              title={post.title}
+              summary={post.summary}
+              thumbnailUri={post.thumbnailUri}
+              date={post.date}
               onPress={() => {
-                // Navigate to BlogDetailScreen (to be created)
-                // navigation.navigate('BlogDetail', { blogPost: post });
-                console.log('Navigate to blog post:', post.title); // Placeholder
+                navigation.navigate('BlogDetail', { blogPost: post });
               }}
             />
           ))
@@ -98,62 +87,31 @@ const BlogsScreen = ({ navigation }) => {
           </View>
         )}
       </ScrollView>
-      <StatusBar style="auto" />
-    </GlobalContainer>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  text: {
-    ...textStyles.defaultText,
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
   },
-  topContainer: {
-    width: '100%',
-    paddingHorizontal: 15,
-    paddingTop: 10, // Added padding top
-    marginBottom: 10,
-  },
-  searchContainer: {
-    ...layoutStyles.SearchBar, // Assuming this provides flex row, align items center etc.
-    // If not, add:
-    // flexDirection: 'row',
-    // alignItems: 'center',
-    // backgroundColor: colors.surface,
-    // borderRadius: 8,
-    // paddingHorizontal: 10,
-    // borderWidth: 1,
-    // borderColor: colors.border,
+  searchBar: {
+    margin: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.ghosted,
+    backgroundColor: colors.background,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
   },
   searchInput: {
-    flex: 1, // Takes available space
     fontSize: 16,
-    paddingVertical: 10, // Adjust for better touch area and appearance
-  },
-  cardContainer: {
-    width: '100%',
-    paddingHorizontal: 15,
-  },
-  card: {
-    backgroundColor: colors.surface,
-    borderRadius: 8,
-    padding: 15,
-    marginBottom: 15,
-    borderWidth: 1,
-    borderColor: colors.border,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  cardTitle: {
     color: colors.primary,
-    marginBottom: 5,
+    paddingVertical: 8,
   },
-  cardShortText: {
-    color: colors.text,
-    fontSize: 14,
-    lineHeight: 20,
+  scrollContent: {
+    paddingBottom: 32,
   },
   noResultsContainer: {
     flex: 1,
@@ -163,7 +121,7 @@ const styles = StyleSheet.create({
   },
   noResultsText: {
     fontSize: 16,
-    color: colors.textSecondary,
+    color: colors.ghosted,
   },
 });
 

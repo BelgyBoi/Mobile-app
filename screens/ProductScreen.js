@@ -10,6 +10,7 @@ import buttonStyles from '../styles/button.js';
 import layoutStyles from '../styles/layout.js';
 import colors from '../styles/colors.js';
 import CloseButton from '../globalElements/CloseButton.js';
+import ViewPort from '../globalElements/ViewPort.js';
 
 
 const brandNames = {
@@ -257,7 +258,7 @@ const HomeScreen = ({navigation}) => {
 
 {/* render view */}
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <ViewPort>
     <Modal
       visible={filtersVisible}
       animationType="slide"
@@ -398,10 +399,10 @@ const HomeScreen = ({navigation}) => {
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
-          </ScrollView>  
-          <CloseButton
-            onPress={() => setSearchQuery('')}
-          />
+          </ScrollView>
+          {searchQuery.length > 0 &&  
+          <CloseButton onPress={() => setSearchQuery('')}/>
+          }
       </View>
       </View>
         {/* Product cards */}
@@ -411,14 +412,14 @@ const HomeScreen = ({navigation}) => {
                 <ProductCard
                   key={product.id}
                   {...product}
-                  onPress={() => navigation.navigate('Details', product)}
+                  onPress={() => navigation.navigate('ProductDetail', product)}
                 />
               ))}   
             </View>
           </ScrollView>
         <StatusBar style="auto" />
       </GlobalContainer>
-    </View>
+    </ViewPort>
   );
 };
 

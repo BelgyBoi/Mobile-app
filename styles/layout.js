@@ -13,6 +13,8 @@ const layoutStyles= StyleSheet.create({
         backgroundColor: colors.background,
         padding: 15,
         borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     centered: {
         flex: 1,
@@ -37,13 +39,31 @@ const layoutStyles= StyleSheet.create({
         backgroundColor: colors.background,
         flexDirection: 'row',
         borderWidth: 1,
-        borderColor: '#ACACAC',
+        borderColor: colors.ghosted,
         width: '85%',
         alignItems: 'center',
         maxHeight: 44,
         justifyContent: 'space-between',
         borderRadius: 5,
+         dropShadow: {
+            shadowColor: colors.shadow,
+            shadowOffset: { 
+                width: 0, 
+                height: 2 
+            },
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+        },
+        elevation: 3,
     },
+    image: {
+        width: '100%',
+        height: 200,
+        resizeMode: 'contain',
+    },
+    card: {
+        marginBottom: 20,
+    }
 
 });
 export default layoutStyles;

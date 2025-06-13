@@ -3,7 +3,8 @@ import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Switch } from 're
 import GlobalContainer from '../globalElements/GlobalContainer.js';
 import colors from '../styles/colors.js';
 import textStyles from '../styles/text.js';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // Optional: for dropdown icons
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import ViewPort from '../globalElements/ViewPort.js'; 
 
 const PreferencesScreen = () => {
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
@@ -38,107 +39,109 @@ const PreferencesScreen = () => {
   };
 
   return (
-    <GlobalContainer>
-      <ScrollView style={styles.container}>
-        <Text style={[styles.headerTitle, textStyles.heading1]}>Preferences</Text>
+    <ViewPort>
+      <GlobalContainer>
+        <ScrollView style={styles.container}>
+          <Text style={[styles.headerTitle, textStyles.heading1]}>Preferences</Text>
 
-        {/* Notification Preferences */}
-        <View style={styles.sectionContainer}>
-          <Text style={[styles.sectionTitle, textStyles.heading2]}>Notifications</Text>
-          <View style={styles.settingItem}>
-            <Text style={[styles.settingLabel, textStyles.defaultText]}>Enable Notifications</Text>
-            <Switch
-              trackColor={{ false: colors.border, true: colors.primary }}
-              thumbColor={notificationsEnabled ? colors.white : colors.surface}
-              ios_backgroundColor={colors.border}
-              onValueChange={toggleNotifications}
-              value={notificationsEnabled}
-            />
-          </View>
-        </View>
-
-        {/* Theme Preferences */}
-        <View style={styles.sectionContainer}>
-          <Text style={[styles.sectionTitle, textStyles.heading2]}>Appearance</Text>
-          <View style={styles.settingItem}>
-            <Text style={[styles.settingLabel, textStyles.defaultText]}>Theme</Text>
-            <TouchableOpacity
-              style={styles.dropdownHeader}
-              onPress={() => {
-                setThemeDropdownOpen(!themeDropdownOpen);
-                setLanguageDropdownOpen(false); // Close other dropdown
-              }}
-            >
-              <Text style={textStyles.defaultText}>{themeOptions.find(opt => opt.value === selectedTheme)?.label}</Text>
-              <Icon name={themeDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color={colors.textSecondary} />
-            </TouchableOpacity>
-          </View>
-          {themeDropdownOpen && (
-            <View style={styles.dropdownListContainer}>
-              {themeOptions.map((option) => (
-                <TouchableOpacity
-                  key={option.value}
-                  style={[
-                    styles.dropdownItem,
-                    selectedTheme === option.value && styles.dropdownItemSelected
-                  ]}
-                  onPress={() => handleSelectTheme(option.value)}
-                >
-                  <Text style={[
-                    textStyles.defaultText,
-                    selectedTheme === option.value ? styles.dropdownItemSelectedText : styles.dropdownItemText
-                  ]}>
-                    {option.label}
-                  </Text>
-                  {selectedTheme === option.value && <Icon name="check" size={16} color={colors.primary} />}
-                </TouchableOpacity>
-              ))}
+          {/* Notification Preferences */}
+          <View style={styles.sectionContainer}>
+            <Text style={[styles.sectionTitle, textStyles.heading2]}>Notifications</Text>
+            <View style={styles.settingItem}>
+              <Text style={[styles.settingLabel, textStyles.defaultText]}>Enable Notifications</Text>
+              <Switch
+                trackColor={{ false: colors.border, true: colors.primary }}
+                thumbColor={notificationsEnabled ? colors.white : colors.surface}
+                ios_backgroundColor={colors.border}
+                onValueChange={toggleNotifications}
+                value={notificationsEnabled}
+              />
             </View>
-          )}
-        </View>
-
-        {/* Language Preferences */}
-        <View style={styles.sectionContainer}>
-          <Text style={[styles.sectionTitle, textStyles.heading2]}>Language</Text>
-          <View style={styles.settingItem}>
-            <Text style={[styles.settingLabel, textStyles.defaultText]}>App Language</Text>
-            <TouchableOpacity
-              style={styles.dropdownHeader}
-              onPress={() => {
-                setLanguageDropdownOpen(!languageDropdownOpen);
-                setThemeDropdownOpen(false); // Close other dropdown
-              }}
-            >
-              <Text style={textStyles.defaultText}>{languageOptions.find(opt => opt.value === selectedLanguage)?.label}</Text>
-              <Icon name={languageDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color={colors.textSecondary} />
-            </TouchableOpacity>
           </View>
-          {languageDropdownOpen && (
-            <View style={styles.dropdownListContainer}>
-              {languageOptions.map((option) => (
-                <TouchableOpacity
-                  key={option.value}
-                  style={[
-                    styles.dropdownItem,
-                    selectedLanguage === option.value && styles.dropdownItemSelected
-                  ]}
-                  onPress={() => handleSelectLanguage(option.value)}
-                >
-                  <Text style={[
-                    textStyles.defaultText,
-                    selectedLanguage === option.value ? styles.dropdownItemSelectedText : styles.dropdownItemText
-                  ]}>
-                    {option.label}
-                  </Text>
-                  {selectedLanguage === option.value && <Icon name="check" size={16} color={colors.primary} />}
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
-        </View>
 
-      </ScrollView>
-    </GlobalContainer>
+          {/* Theme Preferences */}
+          <View style={styles.sectionContainer}>
+            <Text style={[styles.sectionTitle, textStyles.heading2]}>Appearance</Text>
+            <View style={styles.settingItem}>
+              <Text style={[styles.settingLabel, textStyles.defaultText]}>Theme</Text>
+              <TouchableOpacity
+                style={styles.dropdownHeader}
+                onPress={() => {
+                  setThemeDropdownOpen(!themeDropdownOpen);
+                  setLanguageDropdownOpen(false); // Close other dropdown
+                }}
+              >
+                <Text style={textStyles.defaultText}>{themeOptions.find(opt => opt.value === selectedTheme)?.label}</Text>
+                <Icon name={themeDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color={colors.textSecondary} />
+              </TouchableOpacity>
+            </View>
+            {themeDropdownOpen && (
+              <View style={styles.dropdownListContainer}>
+                {themeOptions.map((option) => (
+                  <TouchableOpacity
+                    key={option.value}
+                    style={[
+                      styles.dropdownItem,
+                      selectedTheme === option.value && styles.dropdownItemSelected
+                    ]}
+                    onPress={() => handleSelectTheme(option.value)}
+                  >
+                    <Text style={[
+                      textStyles.defaultText,
+                      selectedTheme === option.value ? styles.dropdownItemSelectedText : styles.dropdownItemText
+                    ]}>
+                      {option.label}
+                    </Text>
+                    {selectedTheme === option.value && <Icon name="check" size={16} color={colors.primary} />}
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
+
+          {/* Language Preferences */}
+          <View style={styles.sectionContainer}>
+            <Text style={[styles.sectionTitle, textStyles.heading2]}>Language</Text>
+            <View style={styles.settingItem}>
+              <Text style={[styles.settingLabel, textStyles.defaultText]}>App Language</Text>
+              <TouchableOpacity
+                style={styles.dropdownHeader}
+                onPress={() => {
+                  setLanguageDropdownOpen(!languageDropdownOpen);
+                  setThemeDropdownOpen(false); // Close other dropdown
+                }}
+              >
+                <Text style={textStyles.defaultText}>{languageOptions.find(opt => opt.value === selectedLanguage)?.label}</Text>
+                <Icon name={languageDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color={colors.textSecondary} />
+              </TouchableOpacity>
+            </View>
+            {languageDropdownOpen && (
+              <View style={styles.dropdownListContainer}>
+                {languageOptions.map((option) => (
+                  <TouchableOpacity
+                    key={option.value}
+                    style={[
+                      styles.dropdownItem,
+                      selectedLanguage === option.value && styles.dropdownItemSelected
+                    ]}
+                    onPress={() => handleSelectLanguage(option.value)}
+                  >
+                    <Text style={[
+                      textStyles.defaultText,
+                      selectedLanguage === option.value ? styles.dropdownItemSelectedText : styles.dropdownItemText
+                    ]}>
+                      {option.label}
+                    </Text>
+                    {selectedLanguage === option.value && <Icon name="check" size={16} color={colors.primary} />}
+                  </TouchableOpacity>
+                ))}
+              </View>
+            )}
+          </View>
+
+        </ScrollView>
+      </GlobalContainer>
+    </ViewPort>
   );
 };
 

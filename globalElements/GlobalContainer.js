@@ -12,15 +12,10 @@ const GlobalContainer = ({ children }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        alignSelf: 'center',
+        flex: 2,
         width: 380,
-        paddingHorizontal: 10,
+        maxWidth: '100%',
         backgroundColor: colors.background,
-        paddingTop: 15,
     },
 });
 
