@@ -47,7 +47,7 @@ const carTypeNames = {
   "684886b43587e1b1bd85e632": "Van",
 };
 
-const ProductScreen = ({navigation}) => {
+const HomeScreen = ({navigation}) => {
   const [products, setProducts] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -218,7 +218,13 @@ const ProductScreen = ({navigation}) => {
           changed = true;
         }
       }
+      // If nothing was selected initially and then a filter makes others incompatible, this handles it.
+      // This case is more for when a product data might change or initial load defines availability.
+      // The primary deselection logic is when a user actively changes a filter.
+      // However, this ensures consistency if, for example, selectedBrands had items but selectedTypes was empty,
+      // and then availableBrands (based on no type selection) didn't include one of the selectedBrands.
 
+      // If no specific filter type is active, ensure selected items are generally valid
       if (selectedTypes.length === 0 && selectedBrands.length > 0) {
         const generallyAvailableBrands = new Set();
         products.forEach(p => {
@@ -251,66 +257,79 @@ const ProductScreen = ({navigation}) => {
     
 
 {/* render view */}
-return (
+  return (
     <ViewPort>
-      <Modal
-        visible={filtersVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setFiltersVisible(false)}
+    <Modal
+      visible={filtersVisible}
+      animationType="slide"
+      transparent={true}
+      onRequestClose={() => setFiltersVisible(false)}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalView}>
+      <View style={{
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.4)',
+        backgroundBlur: 'dark',
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
+        <View style={styles.modalView}>
+          {/* Close Button */}
             <CloseButton 
-              onPress={() => setFiltersVisible(false)}
-              size={30}
-              style={styles.filterCloseBtn}
+            onPress={() => setFiltersVisible(false)}
+            size={30}
+            style={{
+              position: 'absolute',
+              top: 4,
+              right: 10,
+              zIndex: 999, // Ensure close button is on top
+            }}
             />
-            <Text style={[textStyles.header, styles.modalTitle]}>Filters</Text>
+          <Text style={styles.modalTitle}>Filters</Text>
 
-            {(selectedBrands.length > 0 || selectedTypes.length > 0) && (
-              <View style={styles.selectedFiltersSection}>
-                <View style={styles.selectedFiltersHeader}>
-                  <Text style={[textStyles.subtitle, styles.selectedFiltersTitle]}>Active Filters:</Text>
-                  <TouchableOpacity onPress={clearAllFilters} style={buttonStyles.chip}>
-                    <Text style={textStyles.chipText}>Clear all</Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={styles.selectedFiltersContainerChips}>
-                  {selectedBrands.map(brandId => (
-                    <TouchableOpacity key={brandId} onPress={() => handleBrandSelect(brandId)} style={buttonStyles.chip}>
-                      <Text style={textStyles.chipText}>{brandNames[brandId]}</Text>
-                      <Ionicons 
-                        name="close-circle"
-                        size={16}
-                        color={colors.ghosted}
-                        style={styles.filterChipRemove}
-                      />
-                    </TouchableOpacity>
-                  ))}
-                  {selectedTypes.map(typeId => (
-                    <TouchableOpacity key={typeId} onPress={() => handleCarTypeSelect(typeId)} style={buttonStyles.chip}>
-                      <Text style={textStyles.chipText}>{carTypeNames[typeId]}</Text>
-                      <Ionicons 
-                        name="close-circle"
-                        size={16}
-                        color={colors.ghosted}
-                        style={styles.filterChipRemove}
-                      />
-                    </TouchableOpacity>
-                  ))}
-                </View>
+          {/* Selected Filters Display Area */}
+          {(selectedBrands.length > 0 || selectedTypes.length > 0) && (
+            <View style={styles.selectedFiltersSection}>
+              <View style={styles.selectedFiltersHeader}>
+                <Text style={styles.selectedFiltersTitle}>Active Filters:</Text>
+                <TouchableOpacity onPress={clearAllFilters} style={styles.clearAllChipButton}>
+                  <Text style={styles.clearAllChipButtonText}>Clear all</Text>
+                </TouchableOpacity>
               </View>
-            )}
-
-            <View style={[styles.dropdownContainer, styles.brandDropdown]}>              
+              <View style={styles.selectedFiltersContainerChips}>
+                {selectedBrands.map(brandId => (
+                  <TouchableOpacity key={brandId} onPress={() => handleBrandSelect(brandId)} style={styles.filterChip}>
+                    <Text style={[styles.text, styles.filterChipText]}>{brandNames[brandId]}</Text>
+                    <Ionicons 
+                    name="close-circle"
+                    size={16}
+                    color="#777"
+                    style={styles.filterChipRemove}
+                    />
+                  </TouchableOpacity>
+                ))}
+                {selectedTypes.map(typeId => (
+                  <TouchableOpacity key={typeId} onPress={() => handleCarTypeSelect(typeId)} style={styles.filterChip}>
+                    <Text style={[styles.text, styles.filterChipText]}>{carTypeNames[typeId]}</Text>
+                    <Ionicons 
+                    name="close-circle"
+                    size={16}
+                    style={styles.filterChipRemove}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          )}
+      
+            {/* Custom Brands Dropdown */}
+            <View style={{ marginBottom: 0.4, zIndex: 20 }}>
               <TouchableOpacity onPress={() => { setBrandDropdownOpen(!brandDropdownOpen); setCarTypeDropdownOpen(false); }} style={styles.dropdownHeader}>
-                <Text style={[textStyles.defaultText]}>Brands</Text>
-                <Icon name={brandDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color={colors.ghosted} />
+                <Text style={[styles.dropdownHeaderTex, styles.text]}>Brands</Text>
+                <Icon name={brandDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color="#ACACAC" />
               </TouchableOpacity>
               {brandDropdownOpen && (
                 <ScrollView style={styles.dropdownListContainer}>
-                   {brandSelectorItems.map(brand => (
+                  {brandSelectorItems.map(brand => (
                     <TouchableOpacity
                       key={brand.id}
                       onPress={() => handleBrandSelect(brand.id)}
@@ -319,7 +338,7 @@ return (
                         selectedBrands.includes(brand.id) && styles.dropdownItemSelected
                       ]}
                     >
-                      <Text style={[textStyles.defaultText, selectedBrands.includes(brand.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
+                      <Text style={[styles.text, selectedBrands.includes(brand.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
                         {brand.name}
                       </Text>
                       {selectedBrands.includes(brand.id) && <Icon name="check" size={16} color="#007bff" />}
@@ -328,11 +347,12 @@ return (
                 </ScrollView>
               )}
             </View>
-
-            <View style={[styles.dropdownContainer, styles.typeDropdown]}>              
+      
+            {/* Custom Car Types Dropdown */}
+            <View style={{ marginBottom: 15, zIndex: 10 }}>
               <TouchableOpacity onPress={() => { setCarTypeDropdownOpen(!carTypeDropdownOpen); setBrandDropdownOpen(false); }} style={styles.dropdownHeader}>
-                <Text style={[textStyles.defaultText]}>Car Types</Text>
-                <Icon name={carTypeDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color={colors.ghosted} />
+                <Text style={[styles.dropdownHeaderTex, styles.text]}>Car Types</Text>
+                <Icon name={carTypeDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color="#ACACAC" />
               </TouchableOpacity>
               {carTypeDropdownOpen && (
                 <ScrollView style={styles.dropdownListContainer}>
@@ -345,7 +365,7 @@ return (
                         selectedTypes.includes(type.id) && styles.dropdownItemSelected
                       ]}
                     >
-                      <Text style={[textStyles.defaultText, selectedTypes.includes(type.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
+                      <Text style={[styles.text, selectedTypes.includes(type.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
                         {type.name}
                       </Text>
                       {selectedTypes.includes(type.id) && <Icon name="check" size={16} color="#007bff" />}
@@ -354,146 +374,194 @@ return (
                 </ScrollView>
               )}
             </View>
-
-          </View>
+      
+            {/* Removed old "Clear all filters" button */}
+          
         </View>
-      </Modal>
+      </View>
+    </Modal>
 
-      <GlobalContainer>
-        <View style={styles.topContainer}>
-          <TouchableOpacity
-            onPress={() => setFiltersVisible(true)}
-            style={styles.filterIcon}
-          >
-            <Icon name="filter-list" size={30} color={colors.secondary} />
-          </TouchableOpacity>
-
-          <View style={layoutStyles.SearchBar}>
-            <ScrollView horizontal>
-              <TextInput
-                style={[textStyles.defaultText, styles.searchInput]}
-                placeholder="Search for a model..."
-                placeholderTextColor={colors.ghosted}
-                value={searchQuery}
-                onChangeText={setSearchQuery}
-              />
-            </ScrollView>
-            {searchQuery.length > 0 &&  
-              <CloseButton onPress={() => setSearchQuery('')} style={buttonStyles.closeButton} />
-            }
-          </View>
-        </View>
-
-        <ScrollView style={styles.cardContainer} contentContainerStyle={layoutStyles.scrollContainer}>
-          <View style={styles.card}>
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                {...product}
-                onPress={() => navigation.navigate('ProductDetail', product)}
-              />
-            ))}
-          </View>
-        </ScrollView>
+    <GlobalContainer>
+      <View style={styles.topContainer}>
+      <TouchableOpacity
+        onPress={() => setFiltersVisible(true)}
+        style={{ position: 'absolute', top: 10, right: 10, zIndex: 100 }}>
+        <Icon name="filter-list" size={30} color={colors.secondary} />
+        </TouchableOpacity>
+        
+        {/*search bar with clear button*/}
+      <View style={styles.searchContainer}>
+        <ScrollView horizontal>
+          <TextInput
+            style={[styles.text, styles.searchInput]}
+            placeholder="Search for a model..."
+            placeholderTextColor="#999"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+          />
+          </ScrollView>
+          {searchQuery.length > 0 &&  
+          <CloseButton onPress={() => setSearchQuery('')}/>
+          }
+      </View>
+      </View>
+        {/* Product cards */}
+        <ScrollView style={styles.cardContainer}>
+            <View style={styles.card}>   
+              {filteredProducts.map((product) => (
+                <ProductCard
+                  key={product.id}
+                  {...product}
+                  onPress={() => navigation.navigate('ProductDetail', product)}
+                />
+              ))}   
+            </View>
+          </ScrollView>
         <StatusBar style="auto" />
       </GlobalContainer>
     </ViewPort>
   );
 };
 
+
 const styles = StyleSheet.create({
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalView: {
-    ...layoutStyles.FullWindowOverlay,
-  },
-  filterCloseBtn: {
-    ...buttonStyles.closeButton,
-    top: 4,
-    right: 10,
-    zIndex: 999,
-  },
-  modalTitle: {
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  selectedFiltersSection: {
-    marginBottom: 15,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.ghosted,
-  },
-  selectedFiltersHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  selectedFiltersContainerChips: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  filterChipRemove: {
-    marginLeft: 5,
-  },
-  brandDropdown: {
-    zIndex: 20,
-  },
-  typeDropdown: {
-    zIndex: 10,
-  },
-  dropdownHeader: {
-    ...layoutStyles.closeIcon,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    borderWidth: 1,
-    borderColor: colors.ghosted,
-    borderRadius: 5,
-  },
-  dropdownContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center ',
-    alignContent: 'center',
-  },
-  dropdownListContainer: {
+    text: {
+      ...textStyles.defaultText,
+    },
+    heading: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      marginTop: 20,
+    },
+    cardContainer: {
+      width: '100%',
+      marginTop: 20,
+    },
+    card: {
+      marginBottom: 20,
+    },
+    searchContainer: {
+      ...layoutStyles.SearchBar,
+    },
+    topContainer: {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 10,
+    },
+    searchInput: {
+      fontSize: 16,
+      minWidth: '100%',
+    },
+    clearInputButton: {
+      width: '7%',
+      alignContent: 'center',
+    },
+    closeIcon: {
+      fontSize: 20,
+      // color: '#ACACAC',
+    },
+    // Styles for custom dropdown
+    dropdownHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 10,
+      borderWidth: 1,
+      borderColor: '#ACACAC',
+      borderRadius: 5,
+    },
+    dropdownHeaderText: {
+      flex: 1, // Allows text to wrap if too long
+    },
+    dropdownListContainer: {
       borderWidth: 1,
       borderColor: colors.ghosted,
       borderTopWidth: 0,
       borderRadius: 5,
       borderTopLeftRadius: 0,
       borderTopRightRadius: 0,
-  },
-  filterIcon: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    zIndex: 100,
-  },
-  topContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  searchInput: {
-    fontSize: 16,
-    minWidth: '100%',
-  },
-  cardContainer: {
-    width: '100%',
-    marginTop: 20,
-  },
-  card: {
-    marginBottom: 20,
-  },
-});
+    },
+    dropdownItem: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#eee',
+    },
+    dropdownItemText: {
+      // Add styles if needed
+    },
+    dropdownItemSelected: {
+      // backgroundColor: '#e6f7ff', // Optional: highlight selected items
+    },
+    dropdownItemSelectedText: {
+      fontWeight: 'bold', // Optional: make selected text bold
+      color: '#007bff',
+    },
+    // Styles for Modal
+    modalView: {
+      ...layoutStyles.FullWindowOverlay,
+    },
+    modalCloseButton: {
+      position: 'absolute',
+      top: 10,
+      right: 10,
+      zIndex: 101, // Ensure close button is on top
+    },
+    modalTitle: {
+      fontWeight: 'bold',
+      fontSize: 20,
+      marginBottom: 20,
+      textAlign: 'center',
+    },
+    // Styles for Selected Filters Chips Area
+    selectedFiltersSection: {
+      marginBottom: 15,
+      paddingBottom: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#eee',
+    },
+    selectedFiltersHeader: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 8,
+    },
+    selectedFiltersTitle: {
+      fontSize: 14,
+      fontWeight: '600',
+      color: '#555',
+    },
+    clearAllChipButton: {
+      paddingVertical: 4,
+      paddingHorizontal: 8,
+      backgroundColor: '#f0f0f0',
+      borderRadius: 15,
+    },
+    clearAllChipButtonText: {
+      fontSize: 12,
+      color: '#333',
+    },
+    selectedFiltersContainerChips: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      gap: 8,
+    },
+    filterChip: {
+      ...buttonStyles.chip,
+    },
+    filterChipText: {
+      ...textStyles.chipText,
+    },
+    filterChipRemove: {
+      fontSize: 13,
+      color: '#777',
+      fontWeight: 'bold',
+    }
+  });
   
 
-export default ProductScreen;
+export default HomeScreen;

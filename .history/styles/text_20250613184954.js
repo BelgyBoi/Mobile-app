@@ -53,26 +53,5 @@ const textStyles = StyleSheet.create({
     metaText: {
         fontSize: 12,
     },
-    productTitle: {
-      fontSize: 22,
-      fontWeight: 'bold',
-      textAlign: 'center',
-      marginBottom: 10,
-    },
-    
-    productPrice: {
-      fontSize: 18,
-      color: colors.primary,
-      textAlign: 'center',
-      marginBottom: 10,
-    },
-    
-    productDescription: {
-      fontSize: 16,
-      color: colors.darkGray,
-      textAlign: 'center',
-      marginHorizontal: 20,
-    },
-
 });
 export default textStyles;

@@ -32,6 +32,7 @@ const buttonStyles = StyleSheet.create({
         position: 'absolute',
         top: 10,
         right: 10,
+        backgroundColor: colors.secondary,
         padding: 5,
         borderRadius: 15,
     },

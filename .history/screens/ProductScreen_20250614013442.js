@@ -433,12 +433,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
+  selectedFiltersTitle: {
+    fontSize: 14,
+    color: colors.primary,
+  },
   selectedFiltersContainerChips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
   filterChipRemove: {
     marginLeft: 5,
+  },
+  dropdownContainer: {
+    position: 'relative',
+    marginBottom: 10,
   },
   brandDropdown: {
     zIndex: 20,
@@ -456,18 +464,30 @@ const styles = StyleSheet.create({
     borderColor: colors.ghosted,
     borderRadius: 5,
   },
-  dropdownContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center ',
-    alignContent: 'center',
-  },
   dropdownListContainer: {
-      borderWidth: 1,
-      borderColor: colors.ghosted,
-      borderTopWidth: 0,
-      borderRadius: 5,
-      borderTopLeftRadius: 0,
-      borderTopRightRadius: 0,
+    position: 'absolute',
+    top: '100%',
+    width: '100%',
+    borderWidth: 1,
+    borderColor: colors.ghosted,
+    borderTopWidth: 0,
+    borderRadius: 5,
+    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
+    maxHeight: 200,
+  },
+  dropdownItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.ghosted,
+  },
+  dropdownItemSelected: {
+    backgroundColor: colors.secondary,
+  },
+  dropdownItemTextSelected: {
+    color: colors.background,
+    fontWeight: 'bold',
+  },
   },
   filterIcon: {
     position: 'absolute',
@@ -493,6 +513,7 @@ const styles = StyleSheet.create({
   card: {
     marginBottom: 20,
   },
+});
 });
   
 

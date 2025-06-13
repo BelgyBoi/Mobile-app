@@ -319,7 +319,7 @@ return (
                         selectedBrands.includes(brand.id) && styles.dropdownItemSelected
                       ]}
                     >
-                      <Text style={[textStyles.defaultText, selectedBrands.includes(brand.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
+                      <Text style={[styles.text, selectedBrands.includes(brand.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
                         {brand.name}
                       </Text>
                       {selectedBrands.includes(brand.id) && <Icon name="check" size={16} color="#007bff" />}
@@ -433,6 +433,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
+  selectedFiltersTitle: {
+    fontSize: 14,
+    color: colors.primary,
+  },
   selectedFiltersContainerChips: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -455,11 +459,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.ghosted,
     borderRadius: 5,
-  },
-  dropdownContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center ',
-    alignContent: 'center',
   },
   dropdownListContainer: {
       borderWidth: 1,

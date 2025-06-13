@@ -457,9 +457,9 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   dropdownContainer: {
+    flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center ',
-    alignContent: 'center',
+    justifyContent: 'flex-start',
   },
   dropdownListContainer: {
       borderWidth: 1,

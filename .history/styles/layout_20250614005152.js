@@ -67,18 +67,20 @@ const layoutStyles= StyleSheet.create({
     scrollContainer: {
       paddingBottom: 40,
     },
-
+    
     imageContainer: {
       alignItems: 'center',
       marginBottom: 20,
     },
-
+    
     productImage: {
       width: 300,
       height: 300,
       resizeMode: 'contain',
       borderRadius: 10,
     },
+
+
 });
 export default layoutStyles;
 

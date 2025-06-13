@@ -32,6 +32,7 @@ const buttonStyles = StyleSheet.create({
         position: 'absolute',
         top: 10,
         right: 10,
+        backgroundColor: colors.secondary,
         padding: 5,
         borderRadius: 15,
     },
@@ -41,11 +42,12 @@ const buttonStyles = StyleSheet.create({
       paddingVertical: 8,
       alignSelf: 'flex-start',
     },
-
+    
     backButtonText: {
       color: colors.primary,
       fontSize: 16,
       fontWeight: '500',
     },
+    
 });
 export default buttonStyles;

@@ -456,11 +456,6 @@ const styles = StyleSheet.create({
     borderColor: colors.ghosted,
     borderRadius: 5,
   },
-  dropdownContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center ',
-    alignContent: 'center',
-  },
   dropdownListContainer: {
       borderWidth: 1,
       borderColor: colors.ghosted,
