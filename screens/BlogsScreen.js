@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
 import colors from '../styles/colors.js';
 import BlogCard from '../components/BlogCard.js';
 import BaselineText from '../components/BaselineText.js';
-import ViewPort from '..components/ViewPort.js'
+import ViewPort from '../components/ViewPort.js'
 
 const BlogsScreen = ({ navigation }) => {
   const [blogPosts, setBlogPosts] = useState([]);

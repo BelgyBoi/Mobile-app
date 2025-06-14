@@ -5,7 +5,6 @@ import { Modal, ScrollView, StyleSheet, Text, TextInput, Touchable, TouchableOpa
 import  { Ionicons } from '@expo/vector-icons';
 import ProductCard from '../components/ProductCard.js';
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
- 
 import textStyles from '../styles/text.js';
 import buttonStyles from '../styles/button.js';
 import layoutStyles from '../styles/layout.js';
@@ -49,7 +48,7 @@ const carTypeNames = {
   "684886b43587e1b1bd85e632": "Van",
 };
 
-const HomeScreen = ({navigation}) => {
+const ProductScreen = ({navigation}) => {
   const [products, setProducts] = useState([]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -220,13 +219,7 @@ const HomeScreen = ({navigation}) => {
           changed = true;
         }
       }
-      // If nothing was selected initially and then a filter makes others incompatible, this handles it.
-      // This case is more for when a product data might change or initial load defines availability.
-      // The primary deselection logic is when a user actively changes a filter.
-      // However, this ensures consistency if, for example, selectedBrands had items but selectedTypes was empty,
-      // and then availableBrands (based on no type selection) didn't include one of the selectedBrands.
 
-      // If no specific filter type is active, ensure selected items are generally valid
       if (selectedTypes.length === 0 && selectedBrands.length > 0) {
         const generallyAvailableBrands = new Set();
         products.forEach(p => {
@@ -375,15 +368,11 @@ const HomeScreen = ({navigation}) => {
                   ))}
                 </ScrollView>
               )}
-            </View>
-      
-            {/* Removed old "Clear all filters" button */}
-          
+            </View>      
         </View>
       </View>
     </Modal>
 
-    
       <View style={styles.topContainer}>
       <TouchableOpacity
         onPress={() => setFiltersVisible(true)}
@@ -566,4 +555,4 @@ const styles = StyleSheet.create({
   });
   
 
-export default HomeScreen;
+export default ProductScreen;
