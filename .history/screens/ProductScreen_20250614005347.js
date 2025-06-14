@@ -2,7 +2,7 @@
 import React from 'react';
 ;import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import GlobalContainer from '../components/GlobalContainer';
+
 import ViewPort from '../components/ViewPort';
 import { buttonStyles } from '../styles/button';
 import { layout } from '../styles/layout';
@@ -17,7 +17,7 @@ const ProductScreen = () => {
   };
 
   return (
-    <GlobalContainer>
+    
       <ViewPort>
         <TouchableOpacity
           style={buttonStyles.backButton}
@@ -43,7 +43,7 @@ const ProductScreen = () => {
           </BaselineText>
         </ScrollView>
       </ViewPort>
-    </GlobalContainer>
+    
   );
 };
 

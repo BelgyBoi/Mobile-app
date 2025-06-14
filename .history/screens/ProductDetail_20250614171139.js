@@ -1,7 +1,7 @@
 // detail
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import GlobalContainer from '../components/GlobalContainer';
+
 import ViewPort from '../components/ViewPort';
 import BaselineText from '../components/BaselineText.js';
 
@@ -17,7 +17,7 @@ const DetailsScreen = ({ route }) => {
   };
   return (
     <ViewPort>
-      <GlobalContainer>
+      
         <View style={styles.container}>
           <BaselineText style={styles.title}>{title}</BaselineText>
           <BaselineText style={styles.subtitle}>{subtitle}</BaselineText>
@@ -35,7 +35,7 @@ const DetailsScreen = ({ route }) => {
             </TouchableOpacity>
           </View>
         </View>
-      </GlobalContainer>
+      
     </ViewPort>
   );
 }

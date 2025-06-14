@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, ScrollView, Image, Dimensions, Text } from 'react-native';
-import GlobalContainer from '../components/GlobalContainer.js';
+
 import ViewPort from '../components/ViewPort.js';
 import colors from '../styles/colors.js';
 
@@ -31,7 +31,7 @@ const GalleryScreen = () => {
 
   return (
     <ViewPort>
-      <GlobalContainer>
+      
         <ScrollView contentContainerStyle={styles.container}>
           {galleryImages.length === 0 && (
             <BaselineText style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>
@@ -49,7 +49,7 @@ const GalleryScreen = () => {
             </View>
           ))}
         </ScrollView>
-      </GlobalContainer>
+      
     </ViewPort>
   );
 };

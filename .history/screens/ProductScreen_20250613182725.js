@@ -4,7 +4,7 @@ import { Modal, ScrollView, StyleSheet, Text, TextInput, Touchable, TouchableOpa
 import  { Ionicons } from '@expo/vector-icons';
 import ProductCard from '../components/ProductCard.js';
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
-import GlobalContainer from '../components/GlobalContainer.js'; 
+ 
 import textStyles from '../styles/text.js';
 import buttonStyles from '../styles/button.js';
 import layoutStyles from '../styles/layout.js';
@@ -381,7 +381,7 @@ const HomeScreen = ({navigation}) => {
       </View>
     </Modal>
 
-    <GlobalContainer>
+    
       <View style={styles.topContainer}>
       <TouchableOpacity
         onPress={() => setFiltersVisible(true)}
@@ -418,7 +418,7 @@ const HomeScreen = ({navigation}) => {
             </View>
           </ScrollView>
         <StatusBar style="auto" />
-      </GlobalContainer>
+      
     </ViewPort>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, ScrollView, TouchableOpacity, Switch } from 'react-native';
-import GlobalContainer from '../components/GlobalContainer.js';
+
 import colors from '../styles/colors.js';
 import textStyles from '../styles/text.js';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -40,7 +40,7 @@ const PreferencesScreen = () => {
 
   return (
     <ViewPort>
-      <GlobalContainer>
+      
         <ScrollView style={styles.container}>
           <BaselineText style={[styles.headerTitle, textStyles.heading1]}>Preferences</BaselineText>
 
@@ -140,7 +140,7 @@ const PreferencesScreen = () => {
           </View>
 
         </ScrollView>
-      </GlobalContainer>
+      
     </ViewPort>
   );
 };

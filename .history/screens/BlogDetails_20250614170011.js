@@ -6,7 +6,7 @@ import { useWindowDimensions } from 'react-native';
 import layoutStyles from '../styles/layout.js';
 import textStyles from '../styles/text.js';
 import ViewPort from '../components/ViewPort.js';
-import GlobalContainer from '../components/GlobalContainer.js';
+
 *
 
 
@@ -29,7 +29,7 @@ const BlogDetailsScreen = ({ route }) => {
   return (
     <ScrollView style={styles.scrollContainer}>
         <ViewPort >
-        <GlobalContainer>
+        
         <BaselineText style={styles.title}>{title || 'No Title'}</BaselineText>
         {mainImageUri ? (
           <Image 
@@ -65,7 +65,7 @@ const BlogDetailsScreen = ({ route }) => {
         ) : (
           <BaselineText style={styles.body}>No content available.</BaselineText>
         )}
-        </GlobalContainer>
+        
         </ViewPort>
     </ScrollView>
   );
