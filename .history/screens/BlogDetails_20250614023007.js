@@ -5,13 +5,12 @@ import RenderHTML from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
 import layoutStyles from '../styles/layout.js';
 import textStyles from '../styles/text.js';
-import ViewPort from '../globalElements/ViewPort.js';
-import GlobalContainer from '../globalElements/GlobalContainer.js';
+import ComponentContainer from '../globalElements/ComponentContainer.js';   
 
 
 const BlogDetailsScreen = ({ route }) => {
   // Assuming the blog post object is passed via route params
-  const { blogPost } = route.params;
+  const { blogPost, mainImageUri } = route.params;
   const { width } = useWindowDimensions();
 
   // Fallback for missing blog post data
@@ -23,17 +22,16 @@ const BlogDetailsScreen = ({ route }) => {
     );
   }
 
-  const { title, bodyText, author, date, mainImageUri } = blogPost;
+  const { title, bodyText, author, date } = blogPost;
 
   return (
     <ScrollView style={styles.scrollContainer}>
-        <ViewPort >
-        <GlobalContainer>
+      <componentContainer>
         <Text style={styles.title}>{title || 'No Title'}</Text>
         {mainImageUri ? (
           <Image 
             source={{ uri: mainImageUri }} 
-            style={[layoutStyles.image, {flex:1, marginBottom: 10}]} 
+            style={[layoutStyles.image, {flex:1}]} 
             resizeMode="cover"
           />
         ) : (
@@ -64,8 +62,7 @@ const BlogDetailsScreen = ({ route }) => {
         ) : (
           <Text style={styles.body}>No content available.</Text>
         )}
-        </GlobalContainer>
-        </ViewPort>
+      </componentContainer>
     </ScrollView>
   );
 };
@@ -84,12 +81,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: colors.primary,
     marginBottom: 10,
+    textAlign: 'center',
     fontWeight: 'bold',
   },
   metaText: {
     color: colors.ghosted,
     fontSize: 14,
     marginBottom: 5,
+    textAlign: 'center',
   },
   separator: {
     height: 1,
@@ -101,9 +100,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   errorText: {
+    color: 'red',
     fontSize: 14,
+    textAlign: 'center',
     fontWeight: 'thin',
-    paddingVertical: 20,
   },
 });
 

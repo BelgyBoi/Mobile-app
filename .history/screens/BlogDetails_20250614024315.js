@@ -11,7 +11,7 @@ import GlobalContainer from '../globalElements/GlobalContainer.js';
 
 const BlogDetailsScreen = ({ route }) => {
   // Assuming the blog post object is passed via route params
-  const { blogPost } = route.params;
+  const { blogPost, thumbnailUri } = route.params;
   const { width } = useWindowDimensions();
 
   // Fallback for missing blog post data
@@ -23,7 +23,7 @@ const BlogDetailsScreen = ({ route }) => {
     );
   }
 
-  const { title, bodyText, author, date, mainImageUri } = blogPost;
+  const { title, bodyText, author, date } = blogPost;
 
   return (
     <ScrollView style={styles.scrollContainer}>
@@ -32,8 +32,8 @@ const BlogDetailsScreen = ({ route }) => {
         <Text style={styles.title}>{title || 'No Title'}</Text>
         {mainImageUri ? (
           <Image 
-            source={{ uri: mainImageUri }} 
-            style={[layoutStyles.image, {flex:1, marginBottom: 10}]} 
+            source={{ uri: blogPost.thumbnailUri }} 
+            style={[layoutStyles.image, {flex:1}]} 
             resizeMode="cover"
           />
         ) : (

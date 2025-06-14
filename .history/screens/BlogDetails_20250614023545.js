@@ -5,13 +5,12 @@ import RenderHTML from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
 import layoutStyles from '../styles/layout.js';
 import textStyles from '../styles/text.js';
-import ViewPort from '../globalElements/ViewPort.js';
-import GlobalContainer from '../globalElements/GlobalContainer.js';
+import ComponentContainer from '../globalElements/ComponentContainer.js';   
 
 
 const BlogDetailsScreen = ({ route }) => {
   // Assuming the blog post object is passed via route params
-  const { blogPost } = route.params;
+  const { blogPost, mainImageUri } = route.params;
   const { width } = useWindowDimensions();
 
   // Fallback for missing blog post data
@@ -23,17 +22,16 @@ const BlogDetailsScreen = ({ route }) => {
     );
   }
 
-  const { title, bodyText, author, date, mainImageUri } = blogPost;
+  const { title, bodyText, author, date } = blogPost;
 
   return (
     <ScrollView style={styles.scrollContainer}>
-        <ViewPort >
-        <GlobalContainer>
+      <ComponentContainer style={{alignItems: 'flex-start'}}>
         <Text style={styles.title}>{title || 'No Title'}</Text>
         {mainImageUri ? (
           <Image 
             source={{ uri: mainImageUri }} 
-            style={[layoutStyles.image, {flex:1, marginBottom: 10}]} 
+            style={[layoutStyles.image, {flex:1}]} 
             resizeMode="cover"
           />
         ) : (
@@ -64,8 +62,7 @@ const BlogDetailsScreen = ({ route }) => {
         ) : (
           <Text style={styles.body}>No content available.</Text>
         )}
-        </GlobalContainer>
-        </ViewPort>
+      </ComponentContainer>
     </ScrollView>
   );
 };
@@ -73,11 +70,6 @@ const BlogDetailsScreen = ({ route }) => {
 const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
-    backgroundColor: colors.background,
-  },
-  container: {
-    flex: 1,
-    padding: 20,
     backgroundColor: colors.background,
   },
   title: {
@@ -101,9 +93,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   errorText: {
+    color: 'red',
     fontSize: 14,
     fontWeight: 'thin',
-    paddingVertical: 20,
   },
 });
 

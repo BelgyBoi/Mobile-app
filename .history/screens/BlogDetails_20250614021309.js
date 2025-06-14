@@ -3,10 +3,6 @@ import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import colors from '../styles/colors.js';
 import RenderHTML from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
-import layoutStyles from '../styles/layout.js';
-import textStyles from '../styles/text.js';
-import ViewPort from '../globalElements/ViewPort.js';
-import GlobalContainer from '../globalElements/GlobalContainer.js';
 
 
 const BlogDetailsScreen = ({ route }) => {
@@ -23,22 +19,13 @@ const BlogDetailsScreen = ({ route }) => {
     );
   }
 
-  const { title, bodyText, author, date, mainImageUri } = blogPost;
+  const { title, bodyText, author, date } = blogPost;
 
   return (
     <ScrollView style={styles.scrollContainer}>
-        <ViewPort >
-        <GlobalContainer>
+      <View style={styles.container}>
         <Text style={styles.title}>{title || 'No Title'}</Text>
-        {mainImageUri ? (
-          <Image 
-            source={{ uri: mainImageUri }} 
-            style={[layoutStyles.image, {flex:1, marginBottom: 10}]} 
-            resizeMode="cover"
-          />
-        ) : (
-          <Text style={[textStyles.defaultText, styles.errorText]}>Failed to load image</Text>
-        )}
+        <Image>{ mainImageUri}</Image>
         
         {author && (
           <Text style={styles.metaText}>
@@ -64,8 +51,7 @@ const BlogDetailsScreen = ({ route }) => {
         ) : (
           <Text style={styles.body}>No content available.</Text>
         )}
-        </GlobalContainer>
-        </ViewPort>
+      </View>
     </ScrollView>
   );
 };
@@ -84,12 +70,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: colors.primary,
     marginBottom: 10,
+    textAlign: 'center',
     fontWeight: 'bold',
   },
   metaText: {
     color: colors.ghosted,
     fontSize: 14,
     marginBottom: 5,
+    textAlign: 'center',
   },
   separator: {
     height: 1,
@@ -101,9 +89,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   errorText: {
-    fontSize: 14,
-    fontWeight: 'thin',
-    paddingVertical: 20,
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

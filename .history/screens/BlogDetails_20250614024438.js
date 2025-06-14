@@ -33,7 +33,7 @@ const BlogDetailsScreen = ({ route }) => {
         {mainImageUri ? (
           <Image 
             source={{ uri: mainImageUri }} 
-            style={[layoutStyles.image, {flex:1, marginBottom: 10}]} 
+            style={[layoutStyles.image, {flex:1, marginBottom: 20}]} 
             resizeMode="cover"
           />
         ) : (
