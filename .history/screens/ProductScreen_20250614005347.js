@@ -1,9 +1,9 @@
 // ✅ Fully updated ProductScreen.js with global styles applied
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+;import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import GlobalContainer from '../globalElements/GlobalContainer';
-import ViewPort from '../globalElements/ViewPort';
+import GlobalContainer from '../components/GlobalContainer';
+import ViewPort from '../components/ViewPort';
 import { buttonStyles } from '../styles/button';
 import { layout } from '../styles/layout';
 import { textStyles } from '../styles/text';
@@ -23,7 +23,7 @@ const ProductScreen = () => {
           style={buttonStyles.backButton}
           onPress={handleBackPress}
         >
-          <Text style={textStyles.backButtonText}>{'<'} Back</Text>
+          <BaselineText style={textStyles.backButtonText}>{'<'} Back</BaselineText>
         </TouchableOpacity>
 
         <ScrollView contentContainerStyle={layout.scrollContainer}>
@@ -34,13 +34,13 @@ const ProductScreen = () => {
             />
           </View>
 
-          <Text style={textStyles.productTitle}>Product Title</Text>
-          <Text style={textStyles.productPrice}>$99.99</Text>
-          <Text style={textStyles.productDescription}>
+          <BaselineText style={textStyles.productTitle}>Product Title</BaselineText>
+          <BaselineText style={textStyles.productPrice}>$99.99</BaselineText>
+          <BaselineText style={textStyles.productDescription}>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris
             fermentum, quam sed luctus lacinia, massa arcu tincidunt arcu, sed
             facilisis elit tellus in justo.
-          </Text>
+          </BaselineText>
         </ScrollView>
       </ViewPort>
     </GlobalContainer>

@@ -4,13 +4,13 @@ import { Modal, ScrollView, StyleSheet, Text, TextInput, Touchable, TouchableOpa
 import  { Ionicons } from '@expo/vector-icons';
 import ProductCard from '../components/ProductCard.js';
 import Icon from 'react-native-vector-icons/MaterialIcons'; 
-import GlobalContainer from '../globalElements/GlobalContainer.js'; 
+import GlobalContainer from '../components/GlobalContainer.js'; 
 import textStyles from '../styles/text.js';
 import buttonStyles from '../styles/button.js';
 import layoutStyles from '../styles/layout.js';
 import colors from '../styles/colors.js';
-import CloseButton from '../globalElements/CloseButton.js';
-import ViewPort from '../globalElements/ViewPort.js';
+import CloseButton from '../components/CloseButton.js';
+import ViewPort from '../components/ViewPort.js';
 
 
 const brandNames = {
@@ -278,21 +278,21 @@ const HomeScreen = ({navigation}) => {
               zIndex: 999, // Ensure close button is on top
             }}
             />
-          <Text style={styles.modalTitle}>Filters</Text>
+          <BaselineText style={styles.modalTitle}>Filters</BaselineText>
 
           {/* Selected Filters Display Area */}
           {(selectedBrands.length > 0 || selectedTypes.length > 0) && (
             <View style={styles.selectedFiltersSection}>
               <View style={styles.selectedFiltersHeader}>
-                <Text style={styles.selectedFiltersTitle}>Active Filters:</Text>
+                <BaselineText style={styles.selectedFiltersTitle}>Active Filters:</BaselineText>
                 <TouchableOpacity onPress={clearAllFilters} style={styles.clearAllChipButton}>
-                  <Text style={styles.clearAllChipButtonText}>Clear all</Text>
+                  <BaselineText style={styles.clearAllChipButtonText}>Clear all</BaselineText>
                 </TouchableOpacity>
               </View>
               <View style={styles.selectedFiltersContainerChips}>
                 {selectedBrands.map(brandId => (
                   <TouchableOpacity key={brandId} onPress={() => handleBrandSelect(brandId)} style={styles.filterChip}>
-                    <Text style={[styles.text, styles.filterChipText]}>{brandNames[brandId]}</Text>
+                    <BaselineText style={[styles.text, styles.filterChipText]}>{brandNames[brandId]}</BaselineText>
                     <Ionicons 
                     name="close-circle"
                     size={16}
@@ -303,7 +303,7 @@ const HomeScreen = ({navigation}) => {
                 ))}
                 {selectedTypes.map(typeId => (
                   <TouchableOpacity key={typeId} onPress={() => handleCarTypeSelect(typeId)} style={styles.filterChip}>
-                    <Text style={[styles.text, styles.filterChipText]}>{carTypeNames[typeId]}</Text>
+                    <BaselineText style={[styles.text, styles.filterChipText]}>{carTypeNames[typeId]}</BaselineText>
                     <Ionicons 
                     name="close-circle"
                     size={16}
@@ -318,7 +318,7 @@ const HomeScreen = ({navigation}) => {
             {/* Custom Brands Dropdown */}
             <View style={{ marginBottom: 0.4, zIndex: 20 }}>
               <TouchableOpacity onPress={() => { setBrandDropdownOpen(!brandDropdownOpen); setCarTypeDropdownOpen(false); }} style={styles.dropdownHeader}>
-                <Text style={[styles.dropdownHeaderTex, styles.text]}>Brands</Text>
+                <BaselineText style={[styles.dropdownHeaderTex, styles.text]}>Brands</BaselineText>
                 <Icon name={brandDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color="#ACACAC" />
               </TouchableOpacity>
               {brandDropdownOpen && (
@@ -332,9 +332,9 @@ const HomeScreen = ({navigation}) => {
                         selectedBrands.includes(brand.id) && styles.dropdownItemSelected
                       ]}
                     >
-                      <Text style={[styles.text, selectedBrands.includes(brand.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
+                      <BaselineText style={[styles.text, selectedBrands.includes(brand.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
                         {brand.name}
-                      </Text>
+                      </BaselineText>
                       {selectedBrands.includes(brand.id) && <Icon name="check" size={16} color="#007bff" />}
                     </TouchableOpacity>
                   ))}
@@ -345,7 +345,7 @@ const HomeScreen = ({navigation}) => {
             {/* Custom Car Types Dropdown */}
             <View style={{ marginBottom: 15, zIndex: 10 }}>
               <TouchableOpacity onPress={() => { setCarTypeDropdownOpen(!carTypeDropdownOpen); setBrandDropdownOpen(false); }} style={styles.dropdownHeader}>
-                <Text style={[styles.dropdownHeaderTex, styles.text]}>Car Types</Text>
+                <BaselineText style={[styles.dropdownHeaderTex, styles.text]}>Car Types</BaselineText>
                 <Icon name={carTypeDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color="#ACACAC" />
               </TouchableOpacity>
               {carTypeDropdownOpen && (
@@ -359,9 +359,9 @@ const HomeScreen = ({navigation}) => {
                         selectedTypes.includes(type.id) && styles.dropdownItemSelected
                       ]}
                     >
-                      <Text style={[styles.text, selectedTypes.includes(type.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
+                      <BaselineText style={[styles.text, selectedTypes.includes(type.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
                         {type.name}
-                      </Text>
+                      </BaselineText>
                       {selectedTypes.includes(type.id) && <Icon name="check" size={16} color="#007bff" />}
                     </TouchableOpacity>
                   ))}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
+;import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import colors from '../styles/colors.js';
 import RenderHTML from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
@@ -18,7 +18,7 @@ const BlogDetailsScreen = ({ route }) => {
   if (!blogPost) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>Blog post not found.</Text>
+        <BaselineText style={styles.errorText}>Blog post not found.</BaselineText>
       </View>
     );
   }
@@ -29,7 +29,7 @@ const BlogDetailsScreen = ({ route }) => {
     <ScrollView style={styles.scrollContainer}>
         <ViewPort >
         <GlobalContainer>
-        <Text style={styles.title}>{title || 'No Title'}</Text>
+        <BaselineText style={styles.title}>{title || 'No Title'}</BaselineText>
         {mainImageUri ? (
           <Image 
             source={{ uri: mainImageUri }} 
@@ -37,18 +37,18 @@ const BlogDetailsScreen = ({ route }) => {
             resizeMode="cover"
           />
         ) : (
-          <Text style={[textStyles.defaultText, styles.errorText]}>Failed to load image</Text>
+          <BaselineText style={[textStyles.defaultText, styles.errorText]}>Failed to load image</BaselineText>
         )}
         
         {author && (
-          <Text style={styles.metaText}>
+          <BaselineText style={styles.metaText}>
             By: {author}
-          </Text>
+          </BaselineText>
         )}
         {date && (
-          <Text style={styles.metaText}>
+          <BaselineText style={styles.metaText}>
             Published: {new Date(date).toLocaleDateString()}
-          </Text>
+          </BaselineText>
         )}
   
         <View style={styles.separator} />
@@ -62,7 +62,7 @@ const BlogDetailsScreen = ({ route }) => {
             }}
           />
         ) : (
-          <Text style={styles.body}>No content available.</Text>
+          <BaselineText style={styles.body}>No content available.</BaselineText>
         )}
         </GlobalContainer>
         </ViewPort>

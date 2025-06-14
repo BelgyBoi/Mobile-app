@@ -10,7 +10,7 @@ import PreferencesScreen from './screens/PreferencesScreen.js';
 import { useFonts, SpaceGrotesk_300Light, SpaceGrotesk_400Regular, SpaceGrotesk_500Medium, SpaceGrotesk_600SemiBold, SpaceGrotesk_700Bold } from '@expo-google-fonts/space-grotesk';
 import AppLoading from 'expo-app-loading';
 import colors from './styles/colors.js';
-import HeaderBar from './globalElements/HeaderBar.js';
+import HeaderBar from './components/HeaderBar.js';
 import { SafeAreaProvider } from 'react-native-safe-area-context';  
 
 

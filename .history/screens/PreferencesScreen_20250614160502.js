@@ -42,13 +42,13 @@ const PreferencesScreen = () => {
     <ViewPort>
       <GlobalContainer>
         <ScrollView style={styles.container}>
-          <Text style={[styles.headerTitle, textStyles.heading1]}>Preferences</Text>
+          <BaselineText style={[styles.headerTitle, textStyles.heading1]}>Preferences</BaselineText>
 
           {/* Notification Preferences */}
           <View style={styles.sectionContainer}>
-            <Text style={[styles.sectionTitle, textStyles.heading2]}>Notifications</Text>
+            <BaselineText style={[styles.sectionTitle, textStyles.heading2]}>Notifications</BaselineText>
             <View style={styles.settingItem}>
-              <Text style={[styles.settingLabel, textStyles.defaultText]}>Enable Notifications</Text>
+              <BaselineText style={[styles.settingLabel, textStyles.defaultText]}>Enable Notifications</BaselineText>
               <Switch
                 trackColor={{ false: colors.border, true: colors.primary }}
                 thumbColor={notificationsEnabled ? colors.white : colors.surface}
@@ -61,9 +61,9 @@ const PreferencesScreen = () => {
 
           {/* Theme Preferences */}
           <View style={styles.sectionContainer}>
-            <Text style={[styles.sectionTitle, textStyles.heading2]}>Appearance</Text>
+            <BaselineText style={[styles.sectionTitle, textStyles.heading2]}>Appearance</BaselineText>
             <View style={styles.settingItem}>
-              <Text style={[styles.settingLabel, textStyles.defaultText]}>Theme</Text>
+              <BaselineText style={[styles.settingLabel, textStyles.defaultText]}>Theme</BaselineText>
               <TouchableOpacity
                 style={styles.dropdownHeader}
                 onPress={() => {
@@ -71,7 +71,7 @@ const PreferencesScreen = () => {
                   setLanguageDropdownOpen(false); // Close other dropdown
                 }}
               >
-                <Text style={textStyles.defaultText}>{themeOptions.find(opt => opt.value === selectedTheme)?.label}</Text>
+                <BaselineText style={textStyles.defaultText}>{themeOptions.find(opt => opt.value === selectedTheme)?.label}</BaselineText>
                 <Icon name={themeDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color={colors.textSecondary} />
               </TouchableOpacity>
             </View>
@@ -86,12 +86,12 @@ const PreferencesScreen = () => {
                     ]}
                     onPress={() => handleSelectTheme(option.value)}
                   >
-                    <Text style={[
+                    <BaselineText style={[
                       textStyles.defaultText,
                       selectedTheme === option.value ? styles.dropdownItemSelectedText : styles.dropdownItemText
                     ]}>
                       {option.label}
-                    </Text>
+                    </BaselineText>
                     {selectedTheme === option.value && <Icon name="check" size={16} color={colors.primary} />}
                   </TouchableOpacity>
                 ))}
@@ -101,9 +101,9 @@ const PreferencesScreen = () => {
 
           {/* Language Preferences */}
           <View style={styles.sectionContainer}>
-            <Text style={[styles.sectionTitle, textStyles.heading2]}>Language</Text>
+            <BaselineText style={[styles.sectionTitle, textStyles.heading2]}>Language</BaselineText>
             <View style={styles.settingItem}>
-              <Text style={[styles.settingLabel, textStyles.defaultText]}>App Language</Text>
+              <BaselineText style={[styles.settingLabel, textStyles.defaultText]}>App Language</BaselineText>
               <TouchableOpacity
                 style={styles.dropdownHeader}
                 onPress={() => {
@@ -111,7 +111,7 @@ const PreferencesScreen = () => {
                   setThemeDropdownOpen(false); // Close other dropdown
                 }}
               >
-                <Text style={textStyles.defaultText}>{languageOptions.find(opt => opt.value === selectedLanguage)?.label}</Text>
+                <BaselineText style={textStyles.defaultText}>{languageOptions.find(opt => opt.value === selectedLanguage)?.label}</BaselineText>
                 <Icon name={languageDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color={colors.textSecondary} />
               </TouchableOpacity>
             </View>
@@ -126,12 +126,12 @@ const PreferencesScreen = () => {
                     ]}
                     onPress={() => handleSelectLanguage(option.value)}
                   >
-                    <Text style={[
+                    <BaselineText style={[
                       textStyles.defaultText,
                       selectedLanguage === option.value ? styles.dropdownItemSelectedText : styles.dropdownItemText
                     ]}>
                       {option.label}
-                    </Text>
+                    </BaselineText>
                     {selectedLanguage === option.value && <Icon name="check" size={16} color={colors.primary} />}
                   </TouchableOpacity>
                 ))}

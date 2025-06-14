@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, Image, Dimensions } from 'react-native';
-import GlobalContainer from '../globalElements/GlobalContainer.js';
-import ViewPort from '../globalElements/ViewPort.js';
+;import { StyleSheet, View, ScrollView, Image, Dimensions } from 'react-native';
+import GlobalContainer from '../components/GlobalContainer.js';
+import ViewPort from '../components/ViewPort.js';
 import colors from '../styles/colors.js';
 
 // Get screen dimensions

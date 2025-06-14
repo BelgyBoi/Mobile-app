@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, Dimensions } from 'react-native';
+;import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, Dimensions } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import GlobalContainer from '../components/GlobalContainer.js';
 import colors from '../styles/colors.js';
@@ -38,7 +38,7 @@ const HomeScreen = ({ navigation }) => {
           <View key={link.id}>
             <TouchableOpacity style={styles.menuItem} onPress={() => navigation.navigate(link.screen)}>
               <View style={styles.menuIcon}>{link.icon}</View>
-              <Text style={styles.menuLabel}>{link.title}</Text>
+              <BaselineText style={styles.menuLabel}>{link.title}</BaselineText>
             </TouchableOpacity>
             {idx < NAV_LINKS.length - 1 && <View style={styles.separator} />}
           </View>

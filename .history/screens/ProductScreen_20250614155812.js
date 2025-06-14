@@ -266,20 +266,20 @@ return (
               size={30}
               style={styles.filterCloseBtn}
             />
-            <Text style={[textStyles.header, styles.modalTitle]}>Filters</Text>
+            <BaselineText style={[textStyles.header, styles.modalTitle]}>Filters</BaselineText>
 
             {(selectedBrands.length > 0 || selectedTypes.length > 0) && (
               <View style={styles.selectedFiltersSection}>
                 <View style={styles.selectedFiltersHeader}>
-                  <Text style={[textStyles.subtitle, styles.selectedFiltersTitle]}>Active Filters:</Text>
+                  <BaselineText style={[textStyles.subtitle, styles.selectedFiltersTitle]}>Active Filters:</BaselineText>
                   <TouchableOpacity onPress={clearAllFilters} style={buttonStyles.chip}>
-                    <Text style={textStyles.chipText}>Clear all</Text>
+                    <BaselineText style={textStyles.chipText}>Clear all</BaselineText>
                   </TouchableOpacity>
                 </View>
                 <View style={styles.selectedFiltersContainerChips}>
                   {selectedBrands.map(brandId => (
                     <TouchableOpacity key={brandId} onPress={() => handleBrandSelect(brandId)} style={buttonStyles.chip}>
-                      <Text style={textStyles.chipText}>{brandNames[brandId]}</Text>
+                      <BaselineText style={textStyles.chipText}>{brandNames[brandId]}</BaselineText>
                       <Ionicons 
                         name="close-circle"
                         size={16}
@@ -290,7 +290,7 @@ return (
                   ))}
                   {selectedTypes.map(typeId => (
                     <TouchableOpacity key={typeId} onPress={() => handleCarTypeSelect(typeId)} style={buttonStyles.chip}>
-                      <Text style={textStyles.chipText}>{carTypeNames[typeId]}</Text>
+                      <BaselineText style={textStyles.chipText}>{carTypeNames[typeId]}</BaselineText>
                       <Ionicons 
                         name="close-circle"
                         size={16}
@@ -305,7 +305,7 @@ return (
 
             <View style={[styles.dropdownContainer, styles.brandDropdown]}>              
               <TouchableOpacity onPress={() => { setBrandDropdownOpen(!brandDropdownOpen); setCarTypeDropdownOpen(false); }} style={styles.dropdownHeader}>
-                <Text style={[textStyles.defaultText]}>Brands</Text>
+                <BaselineText style={[textStyles.defaultText]}>Brands</BaselineText>
                 <Icon name={brandDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color={colors.ghosted} />
               </TouchableOpacity>
               {brandDropdownOpen && (
@@ -319,9 +319,9 @@ return (
                         selectedBrands.includes(brand.id) && styles.dropdownItemSelected
                       ]}
                     >
-                      <Text style={[textStyles.defaultText, selectedBrands.includes(brand.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
+                      <BaselineText style={[textStyles.defaultText, selectedBrands.includes(brand.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
                         {brand.name}
-                      </Text>
+                      </BaselineText>
                       {selectedBrands.includes(brand.id) && <Icon name="check" size={16} color="#007bff" />}
                     </TouchableOpacity>
                   ))}
@@ -331,7 +331,7 @@ return (
 
             <View style={[styles.dropdownContainer, styles.typeDropdown]}>              
               <TouchableOpacity onPress={() => { setCarTypeDropdownOpen(!carTypeDropdownOpen); setBrandDropdownOpen(false); }} style={styles.dropdownHeader}>
-                <Text style={[textStyles.defaultText]}>Car Types</Text>
+                <BaselineText style={[textStyles.defaultText]}>Car Types</BaselineText>
                 <Icon name={carTypeDropdownOpen ? "arrow-drop-up" : "arrow-drop-down"} size={24} color={colors.ghosted} />
               </TouchableOpacity>
               {carTypeDropdownOpen && (
@@ -345,9 +345,9 @@ return (
                         selectedTypes.includes(type.id) && styles.dropdownItemSelected
                       ]}
                     >
-                      <Text style={[textStyles.defaultText, selectedTypes.includes(type.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
+                      <BaselineText style={[textStyles.defaultText, selectedTypes.includes(type.id) ? styles.dropdownItemSelectedText : styles.dropdownItemText]}>
                         {type.name}
-                      </Text>
+                      </BaselineText>
                       {selectedTypes.includes(type.id) && <Icon name="check" size={16} color="#007bff" />}
                     </TouchableOpacity>
                   ))}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+;import { View, StyleSheet } from 'react-native';
 import colors from '../styles/colors.js';
 
 const ComponentContainer = ({ children }) => {

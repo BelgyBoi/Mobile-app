@@ -34,9 +34,9 @@ const GalleryScreen = () => {
       <GlobalContainer>
         <ScrollView contentContainerStyle={styles.container}>
           {galleryImages.length === 0 && (
-            <Text style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>
+            <BaselineText style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>
               No images loaded
-            </Text>
+            </BaselineText>
           )}
 
           {galleryImages.map((img, index) => (

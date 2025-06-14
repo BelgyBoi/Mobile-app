@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+;import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import colors from '../styles/colors.js';
 
 const BlogDetailsScreen = ({ route }) => {
@@ -10,7 +10,7 @@ const BlogDetailsScreen = ({ route }) => {
   if (!blogPost) {
     return (
       <View style={styles.container}>
-        <Text style={styles.errorText}>Blog post not found.</Text>
+        <BaselineText style={styles.errorText}>Blog post not found.</BaselineText>
       </View>
     );
   }
@@ -20,22 +20,22 @@ const BlogDetailsScreen = ({ route }) => {
   return (
     <ScrollView style={styles.scrollContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>{title || 'No Title'}</Text>
+        <BaselineText style={styles.title}>{title || 'No Title'}</BaselineText>
         
         {author && (
-          <Text style={styles.metaText}>
+          <BaselineText style={styles.metaText}>
             By: {author}
-          </Text>
+          </BaselineText>
         )}
         {date && (
-          <Text style={styles.metaText}>
+          <BaselineText style={styles.metaText}>
             Published: {new Date(date).toLocaleDateString()}
-          </Text>
+          </BaselineText>
         )}
   
         <View style={styles.separator} />
       
-        <Text style={styles.body}>{bodyText || 'No content available.'}</Text>
+        <BaselineText style={styles.body}>{bodyText || 'No content available.'}</BaselineText>
       </View>
     </ScrollView>
   );
