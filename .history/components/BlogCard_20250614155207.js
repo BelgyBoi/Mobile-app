@@ -4,8 +4,8 @@ import colors from '../styles/colors.js';
 import textStyles from '../styles/text.js';
 import buttonStyles from '../styles/button.js';
 import layoutStyles from '../styles/layout.js';
-import ComponentContainer from './ComponentContainer.js';
-import Spacer from './Spacer.js';
+import ComponentContainer from '../globalElements/ComponentContainer.js';
+import Spacer from '../globalElements/Spacer.js';
 
 
 const BlogCard = ({ title, thumbnailUri, summary, date, onPress }) => {

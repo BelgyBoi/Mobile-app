@@ -13,15 +13,10 @@ const ComponentContainer = ({ children }) => {
 const styles = StyleSheet.create({
     cc: {
         flex: 1,
-        flexDirection: 'column',
+        width: '100%',
         backgroundColor: colors.background,
         borderRadius: 5,
-        justifyContent: 'center',
-        alignItems: 'center',
-        alignContent: 'center',
-        width: '100%',
-        maxWidth: 375,
-        alignSelf: 'center',
+        paddingHorizontal: 16,
         marginVertical: 10,
     },
 });

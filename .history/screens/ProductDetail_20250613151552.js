@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import GlobalContainer from '../components/GlobalContainer';
-import ViewPort from '../components/ViewPort';
+import GlobalContainer from '../globalElements/GlobalContainer';
+import ViewPort from '../globalElements/ViewPort';
 
 const DetailsScreen = ({ route }) => {
   const { title, subtitle, price } = route.params;

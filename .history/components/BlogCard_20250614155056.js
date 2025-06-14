@@ -4,15 +4,15 @@ import colors from '../styles/colors.js';
 import textStyles from '../styles/text.js';
 import buttonStyles from '../styles/button.js';
 import layoutStyles from '../styles/layout.js';
-import ComponentContainer from './ComponentContainer.js';
-import Spacer from './Spacer.js';
+import ComponentContainer from '../globalElements/ComponentContainer.js';
+import Spacer from '../globalElements/Spacer.js';
 
 
 const BlogCard = ({ title, thumbnailUri, summary, date, onPress }) => {
   const formattedDate = date ? new Date(date).toLocaleDateString() : 'Date not available';
 
   return (
-    <ComponentContainer>
+    <View>
       {thumbnailUri ? (
         <Image source={{ uri: thumbnailUri }} style={layoutStyles.image}/>
       ) : (
@@ -20,6 +20,7 @@ const BlogCard = ({ title, thumbnailUri, summary, date, onPress }) => {
           <Text style={textStyles.placeholderText}>No Image</Text>
         </View>
       )}
+    <ComponentContainer>
         <Spacer />
            <Text style={[styles.text, textStyles.header]} numberOfLines={2} ellipsizeMode="tail">
              {title || 'Untitled Post'}
@@ -35,6 +36,7 @@ const BlogCard = ({ title, thumbnailUri, summary, date, onPress }) => {
                <Text style={[styles.text, textStyles.buttonText]}>Read More</Text>
            </TouchableOpacity>
     </ComponentContainer>
+    </View>
   );
 };
 
