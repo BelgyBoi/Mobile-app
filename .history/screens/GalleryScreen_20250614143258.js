@@ -43,7 +43,7 @@ const GalleryScreen = () => {
             <View key={img.fileId || index} style={[layoutStyles.imageContainer, { width: '100%' }]}>
               <Image
                 source={{ uri: img.url }}
-                style={[layoutStyles.image, {borderRadius: 10}]}
+                style={[layoutStyles.image], {borderRadius: 10}}
                 resizeMode="cover"
               />
             </View>

@@ -40,10 +40,10 @@ const GalleryScreen = () => {
           )}
 
           {galleryImages.map((img, index) => (
-            <View key={img.fileId || index} style={[layoutStyles.imageContainer, { width: '100%' }]}>
+            <View key={img.fileId || index} style={layoutStyles.image}>
               <Image
                 source={{ uri: img.url }}
-                style={[layoutStyles.image, {borderRadius: 10}]}
+                style={styles.image}
                 resizeMode="cover"
               />
             </View>
@@ -59,7 +59,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
+    padding: imageMargin,
     backgroundColor: colors.background,
+  },
+  imageContainer: {
+    width: imageSize,
+    height: imageSize,
+    margin: imageMargin,
+    backgroundColor: colors.surface,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
   },
 });
 

@@ -40,10 +40,10 @@ const GalleryScreen = () => {
           )}
 
           {galleryImages.map((img, index) => (
-            <View key={img.fileId || index} style={[layoutStyles.imageContainer, { width: '100%' }]}>
+            <View key={img.fileId || index} style={[layoutStyles.imageContainer, { width: '100%', borderRadius: 10 }]}>
               <Image
                 source={{ uri: img.url }}
-                style={[layoutStyles.image, {borderRadius: 10}]}
+                style={layoutStyles.image}
                 resizeMode="cover"
               />
             </View>

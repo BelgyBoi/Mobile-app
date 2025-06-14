@@ -5,6 +5,7 @@ import ViewPort from '../globalElements/ViewPort.js';
 import colors from '../styles/colors.js';
 import layoutStyles from '../styles/layout.js';
 
+const { width } = Dimensions.get('window');
 const GalleryScreen = () => {
   const [galleryImages, setGalleryImages] = useState([]);
 
@@ -40,10 +41,10 @@ const GalleryScreen = () => {
           )}
 
           {galleryImages.map((img, index) => (
-            <View key={img.fileId || index} style={[layoutStyles.imageContainer, { width: '100%' }]}>
+            <View key={img.fileId || index} style={styles.imageContainer}>
               <Image
                 source={{ uri: img.url }}
-                style={[layoutStyles.image, {borderRadius: 10}]}
+                style={layoutStyles.image}
                 resizeMode="cover"
               />
             </View>
@@ -60,6 +61,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'flex-start',
     backgroundColor: colors.background,
+  },
+  imageContainer: {
+    backgroundColor: colors.surface,
+    borderRadius: 8,
+    overflow: 'hidden',
   },
 });
 
