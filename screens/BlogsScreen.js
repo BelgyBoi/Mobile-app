@@ -5,6 +5,7 @@ import colors from '../styles/colors.js';
 import BlogCard from '../components/BlogCard.js';
 import BaselineText from '../components/BaselineText.js';
 import ViewPort from '../components/ViewPort.js'
+import textStyles from '../styles/text.js';
 
 const BlogsScreen = ({ navigation }) => {
   const [blogPosts, setBlogPosts] = useState([]);

@@ -7,14 +7,11 @@ import { useWindowDimensions } from 'react-native';
 import layoutStyles from '../styles/layout.js';
 import textStyles from '../styles/text.js';
 import ViewPort from '../components/ViewPort.js';
-
 import BaselineText from '../components/BaselineText.js';
-
 
 const BlogDetailsScreen = ({ route }) => {
   // Assuming the blog post object is passed via route params
   const { blogPost } = route.params;
-  const { width } = useWindowDimensions();
 
   // Fallback for missing blog post data
   if (!blogPost) {
@@ -30,8 +27,7 @@ const BlogDetailsScreen = ({ route }) => {
   return (
     <ScrollView style={styles.scrollContainer}>
         <ViewPort >
-        
-        <BaselineText style={styles.title}>{title || 'No Title'}</BaselineText>
+        <Text style={styles.title}>{title || 'No Title'}</Text>
         {mainImageUri ? (
           <Image 
             source={{ uri: mainImageUri }} 
@@ -39,7 +35,7 @@ const BlogDetailsScreen = ({ route }) => {
             resizeMode="cover"
           />
         ) : (
-          <BaselineText style={[textStyles.defaultText, styles.errorText]}>Failed to load image</BaselineText>
+          <Text style={[textStyles.defaultText, styles.errorText]}>Failed to load image</Text>
         )}
         
         {author && (
@@ -57,16 +53,15 @@ const BlogDetailsScreen = ({ route }) => {
 
         {bodyText ? (
           <RenderHTML
-            contentWidth={width}
+            contentWidth={useWindowDimensions().width}
             source={{ html: bodyText }}
             tagsStyles={{
               p: styles.body, // apply your existing style to <p> tags
             }}
           />
         ) : (
-          <BaselineText style={styles.body}>No content available.</BaselineText>
+          <Text style={styles.body}>No content available.</Text>
         )}
-        
         </ViewPort>
     </ScrollView>
   );
@@ -86,12 +81,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: colors.primary,
     marginBottom: 10,
+    textAlign: 'center',
     fontWeight: 'bold',
   },
   metaText: {
     color: colors.ghosted,
     fontSize: 14,
     marginBottom: 5,
+    textAlign: 'center',
   },
   separator: {
     height: 1,
@@ -103,9 +100,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   errorText: {
-    fontSize: 14,
-    fontWeight: 'thin',
-    paddingVertical: 20,
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 

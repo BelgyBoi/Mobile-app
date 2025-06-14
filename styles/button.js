@@ -5,19 +5,22 @@ import colors from './colors.js';
 const buttonStyles = StyleSheet.create({
     defaultButton: {
         backgroundColor: colors.secondary,
-        padding: 10,
+        padding: 5,
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
-        width: '50%',  
-        minHeight: 44,
+        alignSelf: 'center',
+        width: '100%',  
+        minHeight: 39,
     },
     secondaryButton: {
         backgroundColor: colors.secondary,
-        padding: 10,
+
         borderRadius: 5,
         alignItems: 'center',
         justifyContent: 'center',
+        width: 100,
+        height: 48,
     },
     chip: {
         backgroundColor: colors.secondary,
@@ -48,5 +51,30 @@ const buttonStyles = StyleSheet.create({
       fontSize: 16,
       fontWeight: '500',
     },
+    clearAllChip: {
+      paddingVertical: 4,
+      paddingHorizontal: 8,
+      backgroundColor: '#f0f0f0',
+      borderRadius: 15,
+    },
+    chip: {         
+      margin: 6,                 
+      backgroundColor: colors.secondary,
+      borderRadius: 20,          
+      flexDirection: 'row',
+      alignItems: 'center',  
+      justifyContent: 'space-around', 
+      minWidth: '25%'   
+    },
+
+    clearAllChip: {
+      paddingHorizontal: 14,
+      backgroundColor: colors.secondary, 
+      borderRadius: 20,
+      alignSelf: 'flex-end',   
+      textAlign: 'center'
+    },
+
+
 });
 export default buttonStyles;

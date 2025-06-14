@@ -7,30 +7,30 @@ import buttonStyles from '../styles/button.js';
 import layoutStyles from '../styles/layout.js';
 import colors from '../styles/colors.js';
 import BaselineText from './BaselineText.js';
+import ViewPort from './ViewPort.js';
+import ContentWrapper from './ContentWrapper.js';
 
 
 const ProductCard = ({ title, subtitle, price, image, onPress }) => {
     const navigation = useNavigation();
     
     return (
-        <View style={{ width: '100%' }}>
+        <ViewPort>
+            <TouchableOpacity onPress={onPress}>
             <Image source={image} style={layoutStyles.image} />
-            <BaselineText style={[styles.text, textStyles.header]}>{title}</BaselineText>
+            <ContentWrapper>
+            <BaselineText style={[textStyles.header]}>{title}</BaselineText>
            
-            <BaselineText style={[styles.text, textStyles.price]}>€{price}</BaselineText>
+            <BaselineText style={[textStyles.price]}>€{price},00</BaselineText>
             
-            <TouchableOpacity style={buttonStyles.defaultButton} onPress={onPress}>
-            <BaselineText style={[styles.text, textStyles.buttonText]}>View Product</BaselineText>
+            </ContentWrapper>
             </TouchableOpacity>
-        </View>
+        </ViewPort>
     );
 };
 
 const styles = StyleSheet.create({
-    text: {
-        ...textStyles.defaultText,
-        ...textStyles.centerAlign,
-    },
+   
 });
 
 export default ProductCard;

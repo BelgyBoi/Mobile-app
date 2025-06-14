@@ -1,65 +1,58 @@
-// screen
-import React from 'react';
-import { StyleSheet, View, ScrollView, Image, Dimensions } from 'react-native';
-
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, ScrollView, Image, Dimensions, Text } from 'react-native';
 import ViewPort from '../components/ViewPort.js';
 import colors from '../styles/colors.js';
-
-// Get screen dimensions
-const { width } = Dimensions.get('window');
-const imageMargin = 5;
-const imageSize = (width - imageMargin * 4) / 2; // Two images per row with margins
-
-// Hardcoded image paths - replace with your actual local image paths
-// For local images, use require()
-// Example: const images = [require('../assets/image1.jpg'), require('../assets/image2.png')];
-// For now, using placeholder URIs. Replace these with your actual image sources.
-const imageSources = [
-  { id: '1', uri: 'https://via.placeholder.com/300/FF0000/FFFFFF?Text=Image1' },
-  { id: '2', uri: 'https://via.placeholder.com/300/00FF00/FFFFFF?Text=Image2' },
-  { id: '3', uri: 'https://via.placeholder.com/300/0000FF/FFFFFF?Text=Image3' },
-  { id: '4', uri: 'https://via.placeholder.com/300/FFFF00/000000?Text=Image4' },
-  { id: '5', uri: 'https://via.placeholder.com/300/FF00FF/FFFFFF?Text=Image5' },
-  { id: '6', uri: 'https://via.placeholder.com/300/00FFFF/000000?Text=Image6' },
-  // Add more image objects as needed
-];
+import layoutStyles from '../styles/layout.js';
+import ContentWrapper from '../components/ContentWrapper.js';
 
 const GalleryScreen = () => {
+  const [galleryImages, setGalleryImages] = useState([]);
+
+  useEffect(() => {
+    fetch(
+      'https://api.webflow.com/v2/sites/67ac9ae63a5b794c54acd2f7/collections/684d62b6ef6aa7e85c27e3b1/items',
+      {
+        headers: {
+          Authorization: 'Bearer 87929257d6887767501086aeed11c32ac4e586deadfd3dbf091789544ce74153',
+          'accept-version': '1.0.0',
+        },
+      }
+    )
+      .then(res => res.json())
+      .then(data => {
+        const images = data.items?.[0]?.fieldData?.image || [];
+        const shuffled = [...images].sort(() => Math.random() - 0.5);
+        setGalleryImages(shuffled);
+      })
+      .catch(err => {
+        console.error('Failed to fetch gallery images', err);
+      });
+  }, []);
+
   return (
-    <ViewPort>
-      
-        <ScrollView contentContainerStyle={styles.container}>
-          {imageSources.map(image => (
-            <View key={image.id} style={styles.imageContainer}>
-              <Image source={{ uri: image.uri }} style={styles.image} resizeMode="cover" />
+    <ViewPort scroll style={{ backgroundColor: colors.secondary }}>
+          {galleryImages.length === 0 && (
+            <Text style={{ color: 'red', textAlign: 'center', marginTop: 20 }}>
+              No images loaded
+            </Text>
+          )}
+
+          {galleryImages.map((img, index) => (
+            <View key={img.fileId || index} style={[ { width: '100%' }]}>
+              <Image
+                source={{ uri: img.url }}
+                style={[layoutStyles.image, {marginBottom: 1, }]}
+                resizeMode="cover"
+              />
             </View>
           ))}
-        </ScrollView>
-      
+
     </ViewPort>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'flex-start', // Align items to the start of the row
-    padding: imageMargin,
-    backgroundColor: colors.background,
-  },
-  imageContainer: {
-    width: imageSize,
-    height: imageSize,
-    margin: imageMargin,
-    backgroundColor: colors.surface, // Placeholder background for the image container
-    borderRadius: 8,
-    overflow: 'hidden', // Ensures the image respects the border radius
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
+  
 });
 
 export default GalleryScreen;
